@@ -97,6 +97,13 @@ namespace CalendarB.Controls.RTDCalendarView
 			VisualStateManager.GoToState(this, IsSelected ? "CheckedDisabled" : "Disabled", true);
 		}
 
+        private void UpdateIsHidden()
+        {
+            IsEnabled = !IsHidden;
+
+            VisualStateManager.GoToState(this, IsHidden ? "CheckedDisabled" : "Disabled", true);
+        }
+
 		private void UpdateIsWeekend()
 		{
 			VisualStateManager.GoToState(this, IsWeekend ? "IsWeekendTrue" : "IsWeekendFalse", true);
@@ -121,14 +128,8 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty IsSelectedProperty =
-			DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(RTDCalendarViewToggleButton), new PropertyMetadata(false, OnIsSelectedChanged));
-
-		private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var proCalendarToggleButton = (RTDCalendarViewToggleButton) d;
-
-			proCalendarToggleButton.UpdateIsSelected();
-		}
+			DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateIsSelected()));
 
 		public bool IsBlackout
 		{
@@ -137,12 +138,8 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty IsBlackoutProperty =
-			DependencyProperty.Register("IsBlackout", typeof(bool), typeof(RTDCalendarViewToggleButton), new PropertyMetadata(true, OnIsBlackoutChanged));
-
-		private static void OnIsBlackoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((RTDCalendarViewToggleButton) d).UpdateIsBlackout();
-		}
+			DependencyProperty.Register(nameof(IsBlackout), typeof(bool), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(true, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateIsBlackout()));
 
 		public bool IsDisabled
 		{
@@ -151,30 +148,28 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty IsDisabledProperty =
-			DependencyProperty.Register(nameof(IsDisabled), typeof(bool), typeof(RTDCalendarViewToggleButton), new PropertyMetadata(false, OnIsDisabledChanged));
+			DependencyProperty.Register(nameof(IsDisabled), typeof(bool), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateIsDisable()));
 
-		private static void OnIsDisabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((RTDCalendarViewToggleButton) d).UpdateIsDisable();
-		}
+        public bool IsHidden
+        {
+            get => (bool)GetValue(IsHiddenProperty);
+            set => SetValue(IsHiddenProperty, value);
+        }
+        
+        public static readonly DependencyProperty IsHiddenProperty =
+            DependencyProperty.Register(nameof(IsHidden), typeof(bool), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateIsHidden()));
 
-		public bool IsWeekend
+        public bool IsWeekend
 		{
 			get => (bool)GetValue(IsWeekendProperty);
 			set => SetValue(IsWeekendProperty, value);
 		}
 
 		public static readonly DependencyProperty IsWeekendProperty =
-			DependencyProperty.Register("IsWeekend", typeof(bool), typeof(RTDCalendarViewToggleButton), new PropertyMetadata(false, OnIsWeekendChanged));
-
-		private static void OnIsWeekendChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var proCalendarToggleButton = d as RTDCalendarViewToggleButton;
-			if (proCalendarToggleButton == null)
-				return;
-
-			proCalendarToggleButton.UpdateIsWeekend();
-		}
+			DependencyProperty.Register(nameof(IsWeekend), typeof(bool), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateIsWeekend()));
 
 		public bool IsToday
 		{
@@ -183,16 +178,8 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty IsTodayProperty =
-			DependencyProperty.Register(nameof(IsToday), typeof(bool), typeof(RTDCalendarViewToggleButton), new PropertyMetadata(false, OnIsTodayChanged));
-
-		private static void OnIsTodayChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var proCalendarToggleButton = (RTDCalendarViewToggleButton) d;
-			if (proCalendarToggleButton == null)
-				return;
-
-			proCalendarToggleButton.UpdateIsToday();
-		}
+			DependencyProperty.Register(nameof(IsToday), typeof(bool), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateIsToday()));
 
 		public DateTime DateTime
 		{
@@ -201,12 +188,8 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty DateTimeProperty =
-			DependencyProperty.Register(nameof(DateTime), typeof(DateTime), typeof(RTDCalendarViewToggleButton), new PropertyMetadata(DateTime.Now, OnDateTimeChanged));
-
-		private static void OnDateTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((RTDCalendarViewToggleButton) d).UpdateDateTime();
-		}
+			DependencyProperty.Register(nameof(DateTime), typeof(DateTime), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(DateTime.Now, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateDateTime()));
 		#endregion
 	}
 }

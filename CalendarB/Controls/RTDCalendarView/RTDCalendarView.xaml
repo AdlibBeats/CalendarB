@@ -155,7 +155,7 @@
                                 Style="{StaticResource CalendarFlipView}">
 								<FlipView.ItemsPanel>
 									<ItemsPanelTemplate>
-										<StackPanel AreScrollSnapPointsRegular="True" Orientation="Vertical"/>
+										<StackPanel AreScrollSnapPointsRegular="True" Orientation="Horizontal"/>
 									</ItemsPanelTemplate>
 								</FlipView.ItemsPanel>
 							</FlipView>

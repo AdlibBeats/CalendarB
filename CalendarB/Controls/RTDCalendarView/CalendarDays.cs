@@ -42,6 +42,7 @@ namespace CalendarB.Controls.RTDCalendarView
 					IsBlackout = GetIsBlackout(remainingDateTime),
 					IsSelected = CurrentDay.IsSelected,
 					IsDisabled = CurrentDay.IsDisabled,
+                    IsHidden = true,
 					IsToday = GetIsToday(remainingDateTime)
 				};
 
