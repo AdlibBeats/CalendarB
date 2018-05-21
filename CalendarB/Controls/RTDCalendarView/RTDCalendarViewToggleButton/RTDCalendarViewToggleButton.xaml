@@ -1,0 +1,215 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:rtdCalendarView="using:CalendarB.Controls.RTDCalendarView">
+
+	<Style TargetType="rtdCalendarView:RTDCalendarViewToggleButton">
+		<Style.Setters>
+			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="BorderBrush" Value="#D5D5D5"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="Width" Value="36"/>
+			<Setter Property="Height" Value="36"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="rtdCalendarView:RTDCalendarViewToggleButton">
+						<Grid
+                            x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Margin="{TemplateBinding Margin}"
+                            Padding="{TemplateBinding Padding}"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}">
+							<Border
+								x:Name="WeekendBorder"
+								Background="#F5F5F5"
+								Visibility="Collapsed"/>
+							<Rectangle
+                                x:Name="TodayRectangle" Height="4"
+                                Fill="Red"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Stretch"
+                                Visibility="Collapsed"/>
+							<ContentPresenter
+                                x:Name="RootContent"
+                                Foreground="{TemplateBinding Foreground}"
+                                FontSize="{TemplateBinding FontSize}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
+								<ContentPresenter.Content>
+									<TextBlock
+                                        x:Name="RootText"
+                                        TextAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Foreground="Black"
+                                        FontSize="{TemplateBinding FontSize}"
+                                        Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+								</ContentPresenter.Content>
+							</ContentPresenter>
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="WeekendStates">
+									<VisualState x:Name="IsWeekendTrue">
+										<VisualState.Setters>
+											<Setter Target="WeekendBorder.Visibility" Value="Visible"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="IsWeekendFalse">
+										<VisualState.Setters>
+											<Setter Target="WeekendBorder.Visibility" Value="Collapsed"/>
+										</VisualState.Setters>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="CalendarStates">
+									<VisualState x:Name="IsTodayTrue">
+										<VisualState.Setters>
+											<Setter Target="TodayRectangle.Visibility" Value="Visible"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="IsTodayFalse">
+										<VisualState.Setters>
+											<Setter Target="TodayRectangle.Visibility" Value="Collapsed"/>
+										</VisualState.Setters>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="CommonStates">
+									<!--False Checked-->
+									<VisualState x:Name="Normal">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Normal}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Normal}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="Pressed">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Pressed}"/>
+											<Setter Target="RootContent.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Pressed}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="PointerOver">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.PointerOver}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.PointerOver}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="Blackouted">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Blackouted}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Blackouted}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="Disabled">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Disabled}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Disabled}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<!--True Checked-->
+									<VisualState x:Name="CheckedNormal">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Checked}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Checked}"/>
+											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Checked}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="CheckedPressed">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPressed}"/>
+											<Setter Target="RootContent.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedPressed}"/>
+											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPressed}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="CheckedPointerOver">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPointerOver}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedPointerOver}"/>
+											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPointerOver}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="CheckedBlackouted">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedBlackouted}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedBlackouted}"/>
+											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedBlackouted}"/>
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="CheckedDisabled">
+										<VisualState.Setters>
+											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedDisabled}"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedDisabled}"/>
+											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedDisabled}"/>
+										</VisualState.Setters>
+									</VisualState>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
+
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.Normal" Color="Black"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.PointerOver" Color="Black"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.Pressed" Color="Black"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.Blackouted" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.Disabled" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.Checked" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.CheckedPointerOver" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.CheckedPressed" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.CheckedBlackouted" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.CheckedDisabled" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.Indeterminate" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.IndeterminatePointerOver" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.IndeterminatePressed" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.IndeterminateBlackouted" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Foreground.IndeterminateDisabled" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IsWeekendNormal" Color="#E6E6E6"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IsWeekendPointerOver" Color="#E6E6E6"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IsWeekendPressed" Color="#E6E6E6"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IsWeekendBlackouted" Color="#E6E6E6"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IsWeekendDisabled" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.Normal" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.PointerOver" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.Pressed" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.Blackouted" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.Disabled" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.Checked" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.CheckedPointerOver" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.CheckedPressed" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.CheckedBlackouted" Color="#FFA44040"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.CheckedDisabled" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.Indeterminate" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IndeterminatePointerOver" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IndeterminatePressed" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IndeterminateBlackouted" Color="#FFA44040"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.Background.IndeterminateDisabled" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.Normal" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.PointerOver" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.Pressed" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.Blackouted" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.Disabled" Color="White"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.Checked" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.CheckedPointerOver" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.CheckedPressed" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.CheckedBlackouted" Color="#FFA44040"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.CheckedDisabled" Color="#CCCCCC"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.Indeterminate" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.IndeterminatePointerOver" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.IndeterminatePressed" Color="Red"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.IndeterminateBlackouted" Color="#FFA44040"/>
+	<SolidColorBrush x:Key="RTDCalendarViewToggleButton.BorderBrush.IndeterminateDisabled" Color="#CCCCCC"/>
+
+</ResourceDictionary>

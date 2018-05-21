@@ -1,0 +1,147 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:rtdCalendarView="using:CalendarB.Controls.RTDCalendarView"
+    xmlns:controls="using:CalendarB.Controls">
+
+	<Style x:Key="CalendarDatePickerButton" TargetType="Button">
+		<Setter Property="BorderBrush" Value="Gray"/>
+		<Setter Property="BorderThickness" Value="0.5"/>
+		<Setter Property="Padding" Value="0"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="VerticalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+		<Setter Property="FontWeight" Value="Normal"/>
+		<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+		<Setter Property="UseSystemFocusVisuals" Value="True"/>
+		<Setter Property="FocusVisualMargin" Value="-3"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Grid
+                        x:Name="RootGrid"
+                        Background="{TemplateBinding Background}"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard>
+										<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="PointerOver">
+									<Storyboard>
+										<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled"/>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="controls:RTDCalendarDatePicker">
+		<Style.Setters>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="Black"/>
+			<Setter Property="Width" Value="252.5"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="controls:RTDCalendarDatePicker">
+						<Grid
+                            x:Name="Root"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            BorderThickness="0"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+							<FlyoutBase.AttachedFlyout>
+								<Flyout Placement="Bottom" x:Name="RootFlyout">
+									<Flyout.FlyoutPresenterStyle>
+										<Style TargetType="FlyoutPresenter">
+											<Setter Property="Margin" Value="0,-5,0,5"/>
+											<Setter Property="Padding" Value="0"/>
+											<Setter Property="BorderBrush" Value="{x:Null}"/>
+											<Setter Property="BorderThickness" Value="0"/>
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="FlyoutPresenter">
+														<ContentPresenter BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</Flyout.FlyoutPresenterStyle>
+									<rtdCalendarView:RTDCalendarView x:Name="RTDCalendarView" />
+								</Flyout>
+							</FlyoutBase.AttachedFlyout>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+							<Button
+                                x:Name="LoadingButton"
+                                Style="{StaticResource CalendarDatePickerButton}"
+                                Background="{TemplateBinding Background}"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}">
+								<Button.Content>
+									<Grid>
+                                        <!--Image Source="ms-appx:///MVideo.RTD.UI.Common/Assets/Icons/icon_calendar.png"-->
+										<Image
+                                            x:Name="CalendarIcon"
+                                            Stretch="Uniform"
+                                            Width="20" Height="20"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"
+                                            Margin="5,0"/>
+										<ProgressRing
+                                            x:Name="LoadingProgress"
+                                            IsActive="False"
+                                            Width="20" Height="20"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"
+                                            Margin="5,0"
+                                            Foreground="Black"/>
+										<TextBlock
+                                            x:Name="DateText"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+											FontSize="16"
+                                            Margin="5,0"
+                                            Text="Выберите дату">
+										</TextBlock>
+									</Grid>
+								</Button.Content>
+							</Button>
+							<Grid
+                                x:Name="FlyoutBorder"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch">
+							</Grid>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
+
+</ResourceDictionary>

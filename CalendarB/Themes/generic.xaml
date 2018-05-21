@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CalendarB.Themes">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Controls/RTDCalendarView/RTDCalendarViewToggleButton/RTDCalendarViewToggleButton.xaml"/>
+        <ResourceDictionary Source="/Controls/RTDCalendarView/AdaptiveGridView/AdaptiveGridView.xaml"/>
+        <ResourceDictionary Source="/Controls/RTDCalendarView/RTDCalendarView.xaml"/>
+        <ResourceDictionary Source="/Controls/RTDCalendarDatePicker/RTDCalendarDatePicker.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>
