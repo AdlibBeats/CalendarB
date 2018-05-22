@@ -9,6 +9,7 @@ namespace CalendarB.Controls.RTDCalendarView
 	public sealed class AdaptiveGridView : Control
 	{
 		public event RoutedEventHandler SelectionChanged;
+        public event RoutedEventHandler BlackSelectionChanged;
 
 		private int _currentColumn;
 		private int _currentRow;
@@ -34,62 +35,50 @@ namespace CalendarB.Controls.RTDCalendarView
 		#region Private Updating Methods
 		private void UpdateColumnsCount()
 		{
-			if (ItemsPanelRoot == null)
-				return;
-
+			if (ItemsPanelRoot == null) return;
 			ItemsPanelRoot.ColumnDefinitions.Clear();
 
 			for (var column = 0; column < ColumnsCount; column++)
 			{
 				ItemsPanelRoot.ColumnDefinitions.Add(new ColumnDefinition
-				{ Width = GridLength.Auto});
+				{ Width = new GridLength(1, GridUnitType.Star) });
 			}
 		}
 
 		private void UpdateRowsCount()
 		{
-			if (ItemsPanelRoot == null)
-				return;
-
+			if (ItemsPanelRoot == null) return;
 			ItemsPanelRoot.RowDefinitions.Clear();
 
 			for (var row = 0; row < RowsCount; row++)
 			{
 				ItemsPanelRoot.RowDefinitions.Add(new RowDefinition
-				{ Height = GridLength.Auto });
+				{ Height = new GridLength(1, GridUnitType.Star) });
 			}
 		}
 
 		private void UpdateItems()
 		{
-			if (ItemsPanelRoot == null)
-				return;
-
+			if (ItemsPanelRoot == null) return;
 			ItemsPanelRoot.Children.Clear();
 
-			if (Items == null)
-				return;
-
+			if (Items == null) return;
 			foreach (var item in Items)
 				Add(item);
 		}
 
 		private void UpdateItemWidth()
 		{
-			if (ItemsPanelRoot?.Children == null)
-				return;
-
-			foreach (var child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
-				child.Width = ItemWidth;
+			if (ItemsPanelRoot?.Children == null) return;
+			//foreach (var child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
+			//	child.Width = ItemWidth;
 		}
 
 		private void UpdateItemHeigh()
 		{
-			if (ItemsPanelRoot?.Children == null)
-				return;
-
-			foreach (FrameworkElement child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
-				child.Height = ItemHeight;
+			if (ItemsPanelRoot?.Children == null) return;
+			//foreach (FrameworkElement child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
+			//	child.Height = ItemHeight;
 		}
 		#endregion
 
@@ -101,14 +90,8 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty ItemsProperty =
-			DependencyProperty.Register(nameof(Items), typeof(IEnumerable<FrameworkElement>), typeof(AdaptiveGridView), new PropertyMetadata(null, OnItemsChanged));
-
-		private static void OnItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var adaptiveGridView = (AdaptiveGridView) d;
-
-			adaptiveGridView?.UpdateItems();
-		}
+			DependencyProperty.Register(nameof(Items), typeof(IEnumerable<FrameworkElement>), typeof(AdaptiveGridView),
+                new PropertyMetadata(default(IEnumerable<FrameworkElement>), (d, e) => ((AdaptiveGridView)d).UpdateItems()));
 
 		public Grid ItemsPanelRoot
 		{
@@ -117,7 +100,8 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty ItemsPanelRootProperty =
-			DependencyProperty.Register(nameof(ItemsPanelRoot), typeof(Grid), typeof(AdaptiveGridView), new PropertyMetadata(null));
+			DependencyProperty.Register(nameof(ItemsPanelRoot), typeof(Grid), typeof(AdaptiveGridView),
+                new PropertyMetadata(default(Grid)));
 
 		public int RowsCount
 		{
@@ -126,14 +110,8 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty RowsCountProperty =
-			DependencyProperty.RegisterAttached(nameof(RowsCount), typeof(int), typeof(AdaptiveGridView), new PropertyMetadata(0, OnRowsCountChanged));
-
-		private static void OnRowsCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var adaptiveGridView = (AdaptiveGridView) d;
-
-			adaptiveGridView?.UpdateRowsCount();
-		}
+			DependencyProperty.RegisterAttached(nameof(RowsCount), typeof(int), typeof(AdaptiveGridView),
+                new PropertyMetadata(0, (d, e) => ((AdaptiveGridView)d).UpdateRowsCount()));
 
 		public int ColumnsCount
 		{
@@ -142,73 +120,49 @@ namespace CalendarB.Controls.RTDCalendarView
 		}
 
 		public static readonly DependencyProperty ColumnsCountProperty =
-			DependencyProperty.RegisterAttached(nameof(ColumnsCount), typeof(int), typeof(AdaptiveGridView), new PropertyMetadata(0, OnColumnsCountChanged));
+			DependencyProperty.RegisterAttached(nameof(ColumnsCount), typeof(int), typeof(AdaptiveGridView),
+                new PropertyMetadata(0, (d, e) => ((AdaptiveGridView)d).UpdateColumnsCount()));
 
-		private static void OnColumnsCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var adaptiveGridView = (AdaptiveGridView) d;
+		//public double ItemWidth
+		//{
+		//	get => (double)GetValue(ItemWidthProperty);
+		//	set => SetValue(ItemWidthProperty, value);
+		//}
 
-			adaptiveGridView?.UpdateColumnsCount();
-		}
+		//public static readonly DependencyProperty ItemWidthProperty =
+		//	DependencyProperty.RegisterAttached(nameof(ItemWidth), typeof(double), typeof(AdaptiveGridView),
+  //              new PropertyMetadata(32d, (d, e) => ((AdaptiveGridView)d).UpdateItemWidth()));
 
-		public double ItemWidth
-		{
-			get => (double)GetValue(ItemWidthProperty);
-			set => SetValue(ItemWidthProperty, value);
-		}
+		//public double ItemHeight
+		//{
+		//	get => (double)GetValue(ItemHeightProperty);
+		//	set => SetValue(ItemHeightProperty, value);
+		//}
 
-		public static readonly DependencyProperty ItemWidthProperty =
-			DependencyProperty.RegisterAttached(nameof(ItemWidth), typeof(double), typeof(AdaptiveGridView), new PropertyMetadata(36d, OnItemWidthChanged));
+		//public static readonly DependencyProperty ItemHeightProperty =
+		//	DependencyProperty.RegisterAttached(nameof(ItemHeight), typeof(double), typeof(AdaptiveGridView),
+  //              new PropertyMetadata(32d, (d, e) => ((AdaptiveGridView)d).UpdateItemHeigh()));
 
-		private static void OnItemWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var adaptiveGridView = (AdaptiveGridView) d;
-
-			adaptiveGridView.UpdateItemWidth();
-		}
-
-		public double ItemHeight
-		{
-			get => (double)GetValue(ItemHeightProperty);
-			set => SetValue(ItemHeightProperty, value);
-		}
-
-		public static readonly DependencyProperty ItemHeightProperty =
-			DependencyProperty.RegisterAttached(nameof(ItemHeight), typeof(double), typeof(AdaptiveGridView), new PropertyMetadata(36d, OnItemHeightChanged));
-
-		private static void OnItemHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var adaptiveGridView = (AdaptiveGridView) d;
-
-			adaptiveGridView?.UpdateItemHeigh();
-		}
 		#endregion
 
 		#region Public IList Methods & Properties
 
 		private void Add(FrameworkElement item)
 		{
-			if (_currentRow == RowsCount)
-				return;
+			if (_currentRow == RowsCount) return;
+			if (item == null) return;
+			if (ItemsPanelRoot?.Children == null) return;
 
-			if (item == null)
-				return;
-			if (ItemsPanelRoot?.Children == null)
-				return;
-
-			item.Width = ItemWidth;
-			item.Height = ItemHeight;
+			//item.Width = ItemWidth;
+			//item.Height = ItemHeight;
 
 			if (item is RTDCalendarViewToggleButton proCalendarToggleButton)
 			{
-				proCalendarToggleButton.Selected -= OnSelected;
-				proCalendarToggleButton.Selected += OnSelected;
+				proCalendarToggleButton.Selected += OnRedSelected;
+				proCalendarToggleButton.Unselected += OnRedSelected;
 
-				proCalendarToggleButton.Unselected -= OnSelected;
-				proCalendarToggleButton.Unselected += OnSelected;
-
-				void OnSelected(object sender, RoutedEventArgs e) =>
-					SelectionChanged?.Invoke(sender, null);
+				void OnRedSelected(object sender, RoutedEventArgs e) =>
+					SelectionChanged?.Invoke(sender, new RoutedEventArgs());
 			}
 
 			Grid.SetColumn(item, _currentColumn);
@@ -224,16 +178,12 @@ namespace CalendarB.Controls.RTDCalendarView
 			ItemsPanelRoot.Children.Add(item);
 		}
 
-		public int Count => ItemsPanelRoot?.Children?.Count ?? -1;
+		public int Count =>
+            ItemsPanelRoot?.Children?.Count ?? -1;
 
+		public void Clear() =>
+            ItemsPanelRoot?.Children?.Clear();
 
-		public void Clear()
-		{
-			ItemsPanelRoot?.Children?.Clear();
-		}
-
-	
-	
 		#endregion
 	}
 }

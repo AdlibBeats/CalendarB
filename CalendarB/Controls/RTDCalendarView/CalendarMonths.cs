@@ -66,9 +66,10 @@ namespace CalendarB.Controls.RTDCalendarView
 					var dateTimeModel = new RTDCalendarViewToggleButton()
 					{
 						DateTime = dateTime,
-						IsWeekend = false,
+						//IsWeekend = false,
 						IsBlackout = false,
 						IsSelected = false,
+                        //IsBlackSelected = false,
 						IsDisabled = false,
 						IsToday = false
 					};
@@ -91,9 +92,10 @@ namespace CalendarB.Controls.RTDCalendarView
 				var dateTimeModel = new RTDCalendarViewToggleButton()
 				{
 					DateTime = dateTime,
-					IsWeekend = false,
+					//IsWeekend = false,
 					IsBlackout = true,
 					IsSelected = false,
+                    //IsBlackSelected = false,
 					IsDisabled = false,
 					IsToday = false
 				};

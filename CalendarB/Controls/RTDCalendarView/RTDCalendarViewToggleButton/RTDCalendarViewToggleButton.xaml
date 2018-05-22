@@ -5,24 +5,29 @@
 
 	<Style TargetType="rtdCalendarView:RTDCalendarViewToggleButton">
 		<Style.Setters>
-			<Setter Property="Foreground" Value="Black"/>
-			<Setter Property="Background" Value="White"/>
+            <Setter Property="TodayForeground" Value="#ED1C24"/>
+            <Setter Property="RedSelectedForeground" Value="#FFFFFF"/>
+            <Setter Property="RedSelectedBackground" Value="#ED1C24"/>
+            <Setter Property="BlackSelectedBorderBrush" Value="#2C3242"/>
+            <Setter Property="BlackoutForeground" Value="#BDBDBD"/>
+            <Setter Property="Foreground" Value="#212121"/>
+			<Setter Property="Background" Value="#FFFFFF"/>
 			<Setter Property="FontSize" Value="14"/>
-			<Setter Property="HorizontalAlignment" Value="Center"/>
-			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="VerticalAlignment" Value="Stretch"/>
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
-			<Setter Property="BorderBrush" Value="#D5D5D5"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Margin" Value="0"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Margin" Value="2,1,2,1"/>
 			<Setter Property="Padding" Value="0"/>
-			<Setter Property="Width" Value="36"/>
-			<Setter Property="Height" Value="36"/>
-			<Setter Property="Template">
+			<!--<Setter Property="Width" Value="32"/>
+			<Setter Property="Height" Value="32"/>-->
+            <Setter Property="IsCornerRadiusVisible" Value="True"/>
+            <Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="rtdCalendarView:RTDCalendarViewToggleButton">
-						<Grid
-                            x:Name="Root"
+                        <Grid x:Name="Root"
                             Background="{TemplateBinding Background}"
                             HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalAlignment}"
@@ -31,129 +36,183 @@
                             Margin="{TemplateBinding Margin}"
                             Padding="{TemplateBinding Padding}"
                             Width="{TemplateBinding Width}"
-                            Height="{TemplateBinding Height}">
-							<Border
-								x:Name="WeekendBorder"
-								Background="#F5F5F5"
-								Visibility="Collapsed"/>
-							<Rectangle
-                                x:Name="TodayRectangle" Height="4"
-                                Fill="Red"
-                                VerticalAlignment="Bottom"
-                                HorizontalAlignment="Stretch"
+                            Height="{TemplateBinding Height}"
+                            Visibility="Visible">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="TodayStates">
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger
+                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
+                                                Path=IsToday, Mode=OneWay}"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="TodayText.Visibility" Value="Visible"/>
+                                            <Setter Target="NotTodayText.Visibility" Value="Collapsed"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="RedSelectedStates">
+                                    <!--<VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger
+                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsSelected, Mode=OneWay}"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="TodayText.FontWeight" Value="Bold"/>
+                                            <Setter Target="NotTodayText.FontWeight" Value="Bold"/>
+                                            <Setter Target="Root.BorderThickness" Value="2"/>
+                                            <Setter Target="Root.BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedBorderBrush, Mode=OneWay}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>-->
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger
+                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
+                                                Path=IsSelected, Mode=OneWay}"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="TodayText.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=RedSelectedForeground, Mode=OneWay}"/>
+                                            <Setter Target="NotTodayText.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=RedSelectedForeground, Mode=OneWay}"/>
+                                            <Setter Target="TodayText.FontWeight" Value="Bold"/>
+                                            <Setter Target="NotTodayText.FontWeight" Value="Bold"/>
+                                            <Setter Target="Root.Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=RedSelectedBackground, Mode=OneWay}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="BlackoutedStates">
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger
+                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
+                                                Path=IsBlackout, Mode=OneWay}"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter
+                                                Target="TodayText.Foreground"
+                                                Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
+                                                Path=BlackoutForeground, Mode=OneWay}"/>
+                                            <Setter
+                                                Target="NotTodayText.Foreground"
+                                                Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
+                                                Path=BlackoutForeground, Mode=OneWay}"/>
+                                            <Setter
+                                                Target="Root.Background"
+                                                Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
+                                                Path=Background, Mode=OneWay}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="HiddenStates">
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger
+                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
+                                                Path=IsHidden, Mode=OneWay}"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.Visibility" Value="Collapsed"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <TextBlock x:Name="TodayText"
+                                FontWeight="Normal"
+                                TextAlignment="Center"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Foreground="{TemplateBinding TodayForeground}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
                                 Visibility="Collapsed"/>
-							<ContentPresenter
-                                x:Name="RootContent"
+                            <TextBlock x:Name="NotTodayText"
+                                FontWeight="Normal"
+                                TextAlignment="Center"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 Foreground="{TemplateBinding Foreground}"
                                 FontSize="{TemplateBinding FontSize}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
-								<ContentPresenter.Content>
-									<TextBlock
-                                        x:Name="RootText"
-                                        TextAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        Foreground="Black"
-                                        FontSize="{TemplateBinding FontSize}"
-                                        Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
-								</ContentPresenter.Content>
-							</ContentPresenter>
-							<VisualStateManager.VisualStateGroups>
-								<VisualStateGroup x:Name="WeekendStates">
-									<VisualState x:Name="IsWeekendTrue">
-										<VisualState.Setters>
-											<Setter Target="WeekendBorder.Visibility" Value="Visible"/>
-										</VisualState.Setters>
-									</VisualState>
-									<VisualState x:Name="IsWeekendFalse">
-										<VisualState.Setters>
-											<Setter Target="WeekendBorder.Visibility" Value="Collapsed"/>
-										</VisualState.Setters>
-									</VisualState>
-								</VisualStateGroup>
-								<VisualStateGroup x:Name="CalendarStates">
+                                Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                Visibility="Visible"/>
+
+                            <!--<VisualStateManager.VisualStateGroups>
+                                --><!--<VisualStateGroup x:Name="CalendarStates">
 									<VisualState x:Name="IsTodayTrue">
 										<VisualState.Setters>
-											<Setter Target="TodayRectangle.Visibility" Value="Visible"/>
+                                            <Setter Target="RootText.Foreground" Value="#ED1C24"/>
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="IsTodayFalse">
 										<VisualState.Setters>
-											<Setter Target="TodayRectangle.Visibility" Value="Collapsed"/>
+											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Normal}"/>
 										</VisualState.Setters>
 									</VisualState>
-								</VisualStateGroup>
-								<VisualStateGroup x:Name="CommonStates">
-									<!--False Checked-->
+								</VisualStateGroup>-->
+								<!--<VisualStateGroup x:Name="CommonStates">
+									--><!--False Checked--><!--
 									<VisualState x:Name="Normal">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Normal}"/>
-											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Normal}"/>
+											--><!--<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Normal}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="Pressed">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Pressed}"/>
-											<Setter Target="RootContent.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Pressed}"/>
+											--><!--<Setter Target="RootContent.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Pressed}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="PointerOver">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.PointerOver}"/>
-											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.PointerOver}"/>
+											--><!--<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.PointerOver}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="Blackouted">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Blackouted}"/>
-											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Blackouted}"/>
+											--><!--<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Blackouted}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="Disabled">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Disabled}"/>
-											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Disabled}"/>
+											--><!--<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Disabled}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
-									<!--True Checked-->
+									--><!--True Checked--><!--
 									<VisualState x:Name="CheckedNormal">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Checked}"/>
 											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.Checked}"/>
-											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.Checked}"/>
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="CheckedPressed">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPressed}"/>
-											<Setter Target="RootContent.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedPressed}"/>
-											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPressed}"/>
+											--><!--<Setter Target="RootContent.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedPressed}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="CheckedPointerOver">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPointerOver}"/>
-											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedPointerOver}"/>
-											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedPointerOver}"/>
+											--><!--<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedPointerOver}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="CheckedBlackouted">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedBlackouted}"/>
-											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedBlackouted}"/>
-											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedBlackouted}"/>
+											--><!--<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedBlackouted}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
 									<VisualState x:Name="CheckedDisabled">
 										<VisualState.Setters>
 											<Setter Target="Root.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedDisabled}"/>
-											<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedDisabled}"/>
-											<Setter Target="WeekendBorder.Background" Value="{StaticResource RTDCalendarViewToggleButton.Background.CheckedDisabled}"/>
+											--><!--<Setter Target="RootText.Foreground" Value="{StaticResource RTDCalendarViewToggleButton.Foreground.CheckedDisabled}"/>--><!--
 										</VisualState.Setters>
 									</VisualState>
-								</VisualStateGroup>
-							</VisualStateManager.VisualStateGroups>
+								</VisualStateGroup>--><!--
+							</VisualStateManager.VisualStateGroups>-->
 						</Grid>
 					</ControlTemplate>
 				</Setter.Value>

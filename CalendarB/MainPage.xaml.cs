@@ -26,7 +26,7 @@ namespace CalendarB
                 for (int day = 1; day <= DateTime.DaysInMonth(DateTime.Now.Year, month); day++)
                     dates.Add(new DateTime(DateTime.Now.Year, month, day));
 
-            calendar.EnableDates = dates;
+            calendar.EnableDates = dates.Where(x => x.Day % 2 == 0).ToList();
         }
     }
 }

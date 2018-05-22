@@ -91,15 +91,14 @@
 		</Setter>
 	</Style>
 
-	<Style TargetType="rtdCalendarView:RTDCalendarView">
-		<Setter Property="Width" Value="253"/>
-		<Setter Property="Height" Value="285"/>
-		<Setter Property="Margin" Value="0"/>
+    <Style TargetType="rtdCalendarView:RTDCalendarView">
+        <Setter Property="Width" Value="278"/>
+        <Setter Property="Margin" Value="0"/>
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="Foreground" Value="Black"/>
 		<Setter Property="Background" Value="White"/>
-		<Setter Property="BorderBrush" Value="#D5D5D5"/>
-		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="VerticalAlignment" Value="Stretch"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
 		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -115,29 +114,38 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         BorderBrush="{TemplateBinding BorderBrush}">
 						<Grid x:Name="RootContent">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
-							<Grid Grid.Row="0">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="Auto"/>
-								</Grid.ColumnDefinitions>
-								<TextBlock
-                                    Grid.Column="0"
-                                    FontSize="24"
-                                    Margin="5,0"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="214"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    FontSize="14"
+                                    FontWeight="Bold"
                                     VerticalAlignment="Center"
-                                    HorizontalAlignment="Left"
+                                    HorizontalAlignment="Center"
                                     TextAlignment="Center"
                                     Text="{Binding ElementName=ContentFlipView, Mode=OneWay, Path=SelectedItem.Items[7].DateTime, Converter={StaticResource DateTimeToMonthConverter}}"/>
-								<StackPanel Grid.Column="1" Orientation="Horizontal">
-									<Button x:Name="PreviousButtonVertical" Style="{StaticResource GlyphButton}" Content="&#xE014;"/>
-									<Button x:Name="NextButtonVertical" Style="{StaticResource GlyphButton}" Content="&#xE015;"/>
-								</StackPanel>
-							</Grid>
+                                <Button x:Name="PreviousButtonVertical"
+                                    Grid.Column="0"
+                                    Style="{StaticResource GlyphButton}"
+                                    FontSize="13"
+                                    FontWeight="Bold"
+                                    Content="&#xE973;"/>
+                                <Button x:Name="NextButtonVertical"
+                                    Grid.Column="2"
+                                    Style="{StaticResource GlyphButton}"
+                                    FontSize="13"
+                                    FontWeight="Bold"
+                                    Content="&#xE974;"/>
+                            </Grid>
 							<rtdCalendarView:AdaptiveGridView
                                 x:Name="DaysOfWeekContent"
                                 HorizontalAlignment="Stretch"
@@ -149,7 +157,6 @@
 							</rtdCalendarView:AdaptiveGridView>
 							<FlipView
                                 x:Name="ContentFlipView"
-                                Height="216"
                                 Grid.Row="2"
                                 BorderBrush="Gray"
                                 Style="{StaticResource CalendarFlipView}">

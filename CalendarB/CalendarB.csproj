@@ -108,6 +108,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Triggers\SideBarAdaptiveTrigger.cs" />
+    <Compile Include="Triggers\SideBarDoubleBooleanTrigger.cs" />
+    <Compile Include="Triggers\TriggerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
