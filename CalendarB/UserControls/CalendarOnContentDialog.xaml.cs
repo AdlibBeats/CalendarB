@@ -19,7 +19,7 @@ namespace CalendarB.UserControls
             calendar.EnableDates = dates.Where(x => x.Day % 2 == 0).ToList();
 
             calendar.IsBlackSelectionMode = true;
-            calendar.OldDateTime = new DateTime(2018, 6, 12);
+            calendar.OldDateTime = new DateTime(2018, 5, 24);
         }
     }
 }
