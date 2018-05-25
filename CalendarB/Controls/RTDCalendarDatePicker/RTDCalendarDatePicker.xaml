@@ -60,7 +60,7 @@
 			<Setter Property="HorizontalAlignment" Value="Left"/>
 			<Setter Property="Background" Value="White"/>
 			<Setter Property="Foreground" Value="Black"/>
-			<Setter Property="Width" Value="252.5"/>
+			<Setter Property="Width" Value="278"/>
 			<Setter Property="Height" Value="30"/>
 			<Setter Property="Template">
 				<Setter.Value>

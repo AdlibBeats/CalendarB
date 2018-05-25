@@ -35,13 +35,14 @@ namespace CalendarB.Controls.RTDCalendarView
 		{
 			for (int i = 0; i < daysCount; i++)
 			{
-				var dateTimeModel = new T
-				{
-					DateTime = remainingDateTime,
-					//IsWeekend = GetIsWeekend(remainingDateTime),
-					IsBlackout = GetIsBlackout(remainingDateTime),
-					IsSelected = CurrentDay.IsSelected,
+                var dateTimeModel = new T
+                {
+                    DateTime = remainingDateTime,
+                    //IsWeekend = GetIsWeekend(remainingDateTime),
+                    IsBlackout = GetIsBlackout(remainingDateTime),
+                    IsSelected = CurrentDay.IsSelected,
                     //IsBlackSelected = CurrentDay.IsBlackSelected,
+                    IsBlackSelectionMode = CurrentDay.IsBlackSelectionMode,
 					IsDisabled = CurrentDay.IsDisabled,
                     IsHidden = true,
 					IsToday = GetIsToday(remainingDateTime)

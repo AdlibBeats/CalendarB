@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -12,9 +13,9 @@ namespace CalendarB.Controls.RTDCalendarView
         public event RoutedEventHandler Selected;
 		public event RoutedEventHandler Unselected;
 
-		public RTDCalendarViewToggleButton()
-		{
-			DefaultStyleKey = typeof(RTDCalendarViewToggleButton);
+        public RTDCalendarViewToggleButton()
+        {
+            DefaultStyleKey = typeof(RTDCalendarViewToggleButton);
 
             PointerPressed += (s, e) =>
             {
@@ -27,7 +28,7 @@ namespace CalendarB.Controls.RTDCalendarView
             };
 
             SizeChanged += (s, e) => UpdateCornerRadius();
-		}
+        }
 
 		protected override void OnApplyTemplate()
 		{
@@ -36,7 +37,9 @@ namespace CalendarB.Controls.RTDCalendarView
             _root = GetTemplateChild("Root") as Grid;
 
             UpdateCornerRadius();
-		}
+            UpdateSelectionMode();
+            UpdateSelectedState();
+        }
 
         private void UpdateCornerRadius()
         {
@@ -48,27 +51,61 @@ namespace CalendarB.Controls.RTDCalendarView
                 _root.CornerRadius = default(CornerRadius);
         }
 
-        public bool IsBlackSelected
+        private void UpdateSelectionMode()
         {
-            get => (bool)GetValue(IsBlackSelectedProperty);
-            set => SetValue(IsBlackSelectedProperty, value);
+            if (IsBlackSelectionMode)
+            {
+                SelectedForeground = new SolidColorBrush(Color.FromArgb(255, 40, 50, 66));
+                SelectedBackground = new SolidColorBrush(Colors.Transparent);
+                SelectedBorderBrush = new SolidColorBrush(Color.FromArgb(255, 40, 50, 66));
+                SelectedBorderThickness = new Thickness(2d);
+            }
+            else
+            {
+                SelectedForeground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                SelectedBackground = new SolidColorBrush(Color.FromArgb(255, 237, 28, 36));
+                SelectedBorderBrush = new SolidColorBrush(Colors.Transparent);
+                SelectedBorderThickness = new Thickness(0d);
+            }
         }
 
-        public static readonly DependencyProperty IsBlackSelectedProperty =
-            DependencyProperty.Register(nameof(IsBlackSelected), typeof(bool), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(false));
+        private void UpdateDateTime() =>
+            Content = DateTime.Day;
 
-        //public bool IsNotSelected => !IsSelected;
+        private void UpdateSelectedState()
+        {
+            if (IsSelected && OldDateTime != default(DateTime))
+                VisualStateManager.GoToState(this, "SelectedOldDateTimeState", true);
+            else if (IsSelected)
+                VisualStateManager.GoToState(this, "SelectedState", true);
+            else if (OldDateTime != default(DateTime))
+            {
+                IsBlackSelectionMode = false;
+                VisualStateManager.GoToState(this, "OldDateTimeState", true);
+            }
+            else
+                VisualStateManager.GoToState(this, "UnselectedState", true);
+        }
+
+        public bool IsBlackSelectionMode
+        {
+            get => (bool)GetValue(IsBlackSelectionModeProperty);
+            set => SetValue(IsBlackSelectionModeProperty, value);
+        }
+
+        public static readonly DependencyProperty IsBlackSelectionModeProperty =
+            DependencyProperty.Register(nameof(IsBlackSelectionMode), typeof(bool), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateSelectionMode()));
 
         public bool IsSelected
 		{
-			get => (bool)GetValue(IsRedSelectedProperty);
-			set => SetValue(IsRedSelectedProperty, value);
+			get => (bool)GetValue(IsSelectedProperty);
+			set => SetValue(IsSelectedProperty, value);
 		}
 
-		public static readonly DependencyProperty IsRedSelectedProperty =
+		public static readonly DependencyProperty IsSelectedProperty =
 			DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(false));
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateSelectedState()));
 
         public bool IsBlackout
 		{
@@ -78,7 +115,9 @@ namespace CalendarB.Controls.RTDCalendarView
 
 		public static readonly DependencyProperty IsBlackoutProperty =
 			DependencyProperty.Register(nameof(IsBlackout), typeof(bool), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).IsEnabled = !((RTDCalendarViewToggleButton)d).IsBlackout));
+                new PropertyMetadata(false, (d, e) =>
+                ((RTDCalendarViewToggleButton)d).IsEnabled =
+                    !((RTDCalendarViewToggleButton)d).IsBlackout));
 
 		public bool IsDisabled
 		{
@@ -88,7 +127,9 @@ namespace CalendarB.Controls.RTDCalendarView
 
 		public static readonly DependencyProperty IsDisabledProperty =
 			DependencyProperty.Register(nameof(IsDisabled), typeof(bool), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).IsEnabled = !((RTDCalendarViewToggleButton)d).IsDisabled));
+                new PropertyMetadata(false, (d, e) =>
+                ((RTDCalendarViewToggleButton)d).IsEnabled =
+                    !((RTDCalendarViewToggleButton)d).IsDisabled));
 
         public bool IsHidden
         {
@@ -98,7 +139,9 @@ namespace CalendarB.Controls.RTDCalendarView
         
         public static readonly DependencyProperty IsHiddenProperty =
             DependencyProperty.Register(nameof(IsHidden), typeof(bool), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).IsEnabled = !((RTDCalendarViewToggleButton)d).IsHidden));
+                new PropertyMetadata(false, (d, e) =>
+                ((RTDCalendarViewToggleButton)d).IsEnabled =
+                    !((RTDCalendarViewToggleButton)d).IsHidden));
 
 		public bool IsToday
 		{
@@ -110,7 +153,17 @@ namespace CalendarB.Controls.RTDCalendarView
 			DependencyProperty.Register(nameof(IsToday), typeof(bool), typeof(RTDCalendarViewToggleButton),
                 new PropertyMetadata(false));
 
-		public DateTime DateTime
+        public DateTime OldDateTime
+        {
+            get => (DateTime)GetValue(OldDateTimeProperty);
+            set => SetValue(OldDateTimeProperty, value);
+        }
+
+        public static readonly DependencyProperty OldDateTimeProperty =
+            DependencyProperty.Register(nameof(OldDateTime), typeof(DateTime), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(default(DateTime), (d, e) => ((RTDCalendarViewToggleButton)d).UpdateSelectedState()));
+
+        public DateTime DateTime
 		{
 			get => (DateTime)GetValue(DateTimeProperty);
 			set => SetValue(DateTimeProperty, value);
@@ -118,7 +171,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
 		public static readonly DependencyProperty DateTimeProperty =
 			DependencyProperty.Register(nameof(DateTime), typeof(DateTime), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(DateTime.Now, (d, e) => ((RTDCalendarViewToggleButton)d).Content = ((RTDCalendarViewToggleButton)d).DateTime.Day));
+                new PropertyMetadata(DateTime.Now, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateDateTime()));
 
         public Brush TodayForeground
         {
@@ -130,35 +183,45 @@ namespace CalendarB.Controls.RTDCalendarView
             DependencyProperty.Register(nameof(TodayForeground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
                 new PropertyMetadata(default(Brush)));
 
-        public Brush RedSelectedForeground
+        public Brush SelectedForeground
         {
-            get => (Brush)GetValue(RedSelectedForegroundProperty);
-            set => SetValue(RedSelectedForegroundProperty, value);
+            get => (Brush)GetValue(SelectedForegroundProperty);
+            set => SetValue(SelectedForegroundProperty, value);
         }
 
-        public static readonly DependencyProperty RedSelectedForegroundProperty =
-            DependencyProperty.Register(nameof(RedSelectedForeground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
+        public static readonly DependencyProperty SelectedForegroundProperty =
+            DependencyProperty.Register(nameof(SelectedForeground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
                 new PropertyMetadata(default(Brush)));
 
-        public Brush RedSelectedBackground
+        public Brush SelectedBackground
         {
-            get => (Brush)GetValue(RedSelectedBackgroundProperty);
-            set => SetValue(RedSelectedBackgroundProperty, value);
+            get => (Brush)GetValue(SelectedBackgroundProperty);
+            set => SetValue(SelectedBackgroundProperty, value);
         }
 
-        public static readonly DependencyProperty RedSelectedBackgroundProperty =
-            DependencyProperty.Register(nameof(RedSelectedBackground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
+        public static readonly DependencyProperty SelectedBackgroundProperty =
+            DependencyProperty.Register(nameof(SelectedBackground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
                 new PropertyMetadata(default(Brush)));
 
-        public Brush BlackSelectedBorderBrush
+        public Brush SelectedBorderBrush
         {
-            get => (Brush)GetValue(BlackSelectedBorderBrushProperty);
-            set => SetValue(BlackSelectedBorderBrushProperty, value);
+            get => (Brush)GetValue(SelectedBorderBrushProperty);
+            set => SetValue(SelectedBorderBrushProperty, value);
         }
 
-        public static readonly DependencyProperty BlackSelectedBorderBrushProperty =
-            DependencyProperty.Register(nameof(BlackSelectedBorderBrush), typeof(Brush), typeof(RTDCalendarViewToggleButton),
+        public static readonly DependencyProperty SelectedBorderBrushProperty =
+            DependencyProperty.Register(nameof(SelectedBorderBrush), typeof(Brush), typeof(RTDCalendarViewToggleButton),
                 new PropertyMetadata(default(Brush)));
+
+        public Thickness SelectedBorderThickness
+        {
+            get => (Thickness)GetValue(SelectedBorderThicknessProperty);
+            set => SetValue(SelectedBorderThicknessProperty, value);
+        }
+
+        public static readonly DependencyProperty SelectedBorderThicknessProperty =
+            DependencyProperty.Register(nameof(SelectedBorderThickness), typeof(Thickness), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(default(Thickness)));
 
         public Brush BlackoutForeground
         {

@@ -69,7 +69,7 @@ namespace CalendarB.Controls.RTDCalendarView
 						//IsWeekend = false,
 						IsBlackout = false,
 						IsSelected = false,
-                        //IsBlackSelected = false,
+                        IsBlackSelectionMode = false,
 						IsDisabled = false,
 						IsToday = false
 					};
@@ -96,6 +96,7 @@ namespace CalendarB.Controls.RTDCalendarView
 					IsBlackout = true,
 					IsSelected = false,
                     //IsBlackSelected = false,
+                    IsBlackSelectionMode = false,
 					IsDisabled = false,
 					IsToday = false
 				};

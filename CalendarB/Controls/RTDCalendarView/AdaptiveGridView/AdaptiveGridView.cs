@@ -158,12 +158,12 @@ namespace CalendarB.Controls.RTDCalendarView
 
 			if (item is RTDCalendarViewToggleButton proCalendarToggleButton)
 			{
-				proCalendarToggleButton.Selected += OnRedSelected;
-				proCalendarToggleButton.Unselected += OnRedSelected;
+				proCalendarToggleButton.Selected += OnSelected;
+				proCalendarToggleButton.Unselected += OnSelected;
 
-				void OnRedSelected(object sender, RoutedEventArgs e) =>
+				void OnSelected(object sender, RoutedEventArgs e) =>
 					SelectionChanged?.Invoke(sender, new RoutedEventArgs());
-			}
+            }
 
 			Grid.SetColumn(item, _currentColumn);
 			Grid.SetRow(item, _currentRow);

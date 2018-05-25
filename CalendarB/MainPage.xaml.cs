@@ -27,6 +27,9 @@ namespace CalendarB
                     dates.Add(new DateTime(DateTime.Now.Year, month, day));
 
             calendar.EnableDates = dates.Where(x => x.Day % 2 == 0).ToList();
+
+            calendar.IsBlackSelectionMode = true;
+            calendar.RedDateTime = new DateTime(2018, 6, 12);
         }
     }
 }

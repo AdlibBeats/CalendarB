@@ -23,7 +23,7 @@ namespace CalendarB.Controls
 
 		public RTDCalendarDatePicker()
 		{
-			this.DefaultStyleKey = typeof(RTDCalendarDatePicker);
+			DefaultStyleKey = typeof(RTDCalendarDatePicker);
 		}
 
 		protected override void OnApplyTemplate()
@@ -74,8 +74,11 @@ namespace CalendarB.Controls
 
 		private void OnCalendarViewInitialized(object sender, RoutedEventArgs e)
 		{
-			_calendarView.SetSelectedDate(SelectedDate);
-		}
+            _calendarView.SetSelectedDate(SelectedDate);
+
+            UpdateBlackSelectionMode();
+            UpdateRedDateTime();
+        }
 
 		private void loadingButton_Tapped(object sender, RoutedEventArgs e)
 		{
@@ -174,7 +177,33 @@ namespace CalendarB.Controls
 		public static readonly DependencyProperty SelectedDateProperty =
 			DependencyProperty.Register(nameof(SelectedDate), typeof(DateTime?), typeof(RTDCalendarDatePicker), new PropertyMetadata(null, OnSelectedDateChanged));
 
-		private static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public DateTime? RedDateTime
+        {
+            get => (DateTime?)GetValue(RedDateTimeProperty);
+            set => SetValue(RedDateTimeProperty, value);
+        }
+
+        public static readonly DependencyProperty RedDateTimeProperty =
+            DependencyProperty.Register(nameof(RedDateTime), typeof(DateTime?), typeof(RTDCalendarDatePicker),
+                new PropertyMetadata(default(DateTime), (d, e) => ((RTDCalendarDatePicker)d).UpdateRedDateTime()));
+
+        public bool IsBlackSelectionMode
+        {
+            get => (bool)GetValue(IsBlackSelectionModeProperty);
+            set => SetValue(IsBlackSelectionModeProperty, value);
+        }
+
+        public static readonly DependencyProperty IsBlackSelectionModeProperty =
+            DependencyProperty.Register(nameof(IsBlackSelectionMode), typeof(bool), typeof(RTDCalendarDatePicker),
+                new PropertyMetadata(false, (d, e) => ((RTDCalendarDatePicker)d).UpdateRedDateTime()));
+
+        private void UpdateRedDateTime() =>
+            _calendarView?.SetRedDateTime(RedDateTime);
+
+        private void UpdateBlackSelectionMode() =>
+            _calendarView?.SetBlackSelectionMode(IsBlackSelectionMode);
+
+        private static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 
 			var self = (RTDCalendarDatePicker)d;
