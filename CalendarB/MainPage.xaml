@@ -6,14 +6,11 @@
     xmlns:h="using:System"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CalendarB.Controls"
+    xmlns:controls="using:CalendarB.UserControls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <controls:RTDCalendarDatePicker
-            x:Name="calendar"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"/>
+        <controls:CalendarOnContentDialog/>
     </Grid>
 </Page>

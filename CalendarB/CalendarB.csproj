@@ -111,6 +111,9 @@
     <Compile Include="Triggers\SideBarAdaptiveTrigger.cs" />
     <Compile Include="Triggers\SideBarDoubleBooleanTrigger.cs" />
     <Compile Include="Triggers\TriggerBase.cs" />
+    <Compile Include="UserControls\CalendarOnContentDialog.xaml.cs">
+      <DependentUpon>CalendarOnContentDialog.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -154,6 +157,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\CalendarOnContentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
