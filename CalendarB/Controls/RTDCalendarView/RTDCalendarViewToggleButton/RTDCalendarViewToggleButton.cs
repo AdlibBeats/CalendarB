@@ -37,7 +37,6 @@ namespace CalendarB.Controls.RTDCalendarView
             _root = GetTemplateChild("Root") as Grid;
 
             UpdateCornerRadius();
-            UpdateSelectionMode();
             UpdateSelectedState();
         }
 
@@ -51,24 +50,6 @@ namespace CalendarB.Controls.RTDCalendarView
                 _root.CornerRadius = default(CornerRadius);
         }
 
-        private void UpdateSelectionMode()
-        {
-            if (IsBlackSelectionMode)
-            {
-                SelectedForeground = new SolidColorBrush(Color.FromArgb(255, 40, 50, 66));
-                SelectedBackground = new SolidColorBrush(Colors.Transparent);
-                SelectedBorderBrush = new SolidColorBrush(Color.FromArgb(255, 40, 50, 66));
-                SelectedBorderThickness = new Thickness(2d);
-            }
-            else
-            {
-                SelectedForeground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-                SelectedBackground = new SolidColorBrush(Color.FromArgb(255, 237, 28, 36));
-                SelectedBorderBrush = new SolidColorBrush(Colors.Transparent);
-                SelectedBorderThickness = new Thickness(0d);
-            }
-        }
-
         private void UpdateDateTime() =>
             Content = DateTime.Day;
 
@@ -77,7 +58,7 @@ namespace CalendarB.Controls.RTDCalendarView
             if (IsSelected && OldDateTime != default(DateTime))
                 VisualStateManager.GoToState(this, "SelectedOldDateTimeState", true);
             else if (IsSelected)
-                VisualStateManager.GoToState(this, "SelectedState", true);
+                VisualStateManager.GoToState(this, IsBlackSelectionMode ? "BlackSelectedState" : "SelectedState", true);
             else if (OldDateTime != default(DateTime))
             {
                 IsBlackSelectionMode = false;
@@ -95,7 +76,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty IsBlackSelectionModeProperty =
             DependencyProperty.Register(nameof(IsBlackSelectionMode), typeof(bool), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(false, (d, e) => ((RTDCalendarViewToggleButton)d).UpdateSelectionMode()));
+                new PropertyMetadata(false));
 
         public bool IsSelected
 		{
@@ -181,7 +162,47 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty TodayForegroundProperty =
             DependencyProperty.Register(nameof(TodayForeground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(default(Brush)));
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 237, 28, 36))));
+
+        public Brush BlackSelectedForeground
+        {
+            get => (Brush)GetValue(BlackSelectedForegroundProperty);
+            set => SetValue(BlackSelectedForegroundProperty, value);
+        }
+
+        public static readonly DependencyProperty BlackSelectedForegroundProperty =
+            DependencyProperty.Register(nameof(BlackSelectedForeground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 44, 50, 66))));
+
+        public Brush BlackSelectedBackground
+        {
+            get => (Brush)GetValue(BlackSelectedBackgroundProperty);
+            set => SetValue(BlackSelectedBackgroundProperty, value);
+        }
+
+        public static readonly DependencyProperty BlackSelectedBackgroundProperty =
+            DependencyProperty.Register(nameof(BlackSelectedBackground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+
+        public Brush BlackSelectedBorderBrush
+        {
+            get => (Brush)GetValue(BlackSelectedBorderBrushProperty);
+            set => SetValue(BlackSelectedBorderBrushProperty, value);
+        }
+
+        public static readonly DependencyProperty BlackSelectedBorderBrushProperty =
+            DependencyProperty.Register(nameof(BlackSelectedBorderBrush), typeof(Brush), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 44, 50, 66))));
+
+        public Thickness BlackSelectedBorderThickness
+        {
+            get => (Thickness)GetValue(BlackSelectedBorderThicknessProperty);
+            set => SetValue(BlackSelectedBorderThicknessProperty, value);
+        }
+
+        public static readonly DependencyProperty BlackSelectedBorderThicknessProperty =
+            DependencyProperty.Register(nameof(BlackSelectedBorderThickness), typeof(Thickness), typeof(RTDCalendarViewToggleButton),
+                new PropertyMetadata(new Thickness(2d)));
 
         public Brush SelectedForeground
         {
@@ -191,7 +212,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty SelectedForegroundProperty =
             DependencyProperty.Register(nameof(SelectedForeground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(default(Brush)));
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))));
 
         public Brush SelectedBackground
         {
@@ -201,7 +222,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty SelectedBackgroundProperty =
             DependencyProperty.Register(nameof(SelectedBackground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(default(Brush)));
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 237, 28, 36))));
 
         public Brush SelectedBorderBrush
         {
@@ -211,7 +232,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty SelectedBorderBrushProperty =
             DependencyProperty.Register(nameof(SelectedBorderBrush), typeof(Brush), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(default(Brush)));
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 237, 28, 36))));
 
         public Thickness SelectedBorderThickness
         {
@@ -221,7 +242,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty SelectedBorderThicknessProperty =
             DependencyProperty.Register(nameof(SelectedBorderThickness), typeof(Thickness), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(default(Thickness)));
+                new PropertyMetadata(new Thickness(0d)));
 
         public Brush BlackoutForeground
         {
@@ -231,7 +252,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty BlackoutForegroundProperty =
             DependencyProperty.Register(nameof(BlackoutForeground), typeof(Brush), typeof(RTDCalendarViewToggleButton),
-                new PropertyMetadata(default(Brush)));
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 189, 189, 189))));
 
         public bool IsCornerRadiusVisible
         {

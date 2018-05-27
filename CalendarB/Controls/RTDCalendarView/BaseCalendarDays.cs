@@ -28,10 +28,8 @@ namespace CalendarB.Controls.RTDCalendarView
 				var dateTimeModel = new T()
 				{
 					DateTime = dateTime,
-					//IsWeekend = GetIsWeekend(dateTime),
 					IsBlackout = GetIsBlackout(dateTime),
 					IsSelected = CurrentDay.IsSelected,
-                    //IsBlackSelected = CurrentDay.IsBlackSelected,
 					IsDisabled = CurrentDay.IsDisabled,
 					IsToday = GetIsToday(dateTime)
 				};

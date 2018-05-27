@@ -9,7 +9,6 @@ namespace CalendarB.Controls.RTDCalendarView
 	public sealed class AdaptiveGridView : Control
 	{
 		public event RoutedEventHandler SelectionChanged;
-        public event RoutedEventHandler BlackSelectionChanged;
 
 		private int _currentColumn;
 		private int _currentRow;

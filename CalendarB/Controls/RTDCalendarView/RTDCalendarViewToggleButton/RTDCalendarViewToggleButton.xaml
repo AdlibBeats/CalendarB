@@ -9,8 +9,12 @@
             <Setter Property="TodayForeground" Value="#ED1C24"/>
             <Setter Property="SelectedForeground" Value="#FFFFFF"/>
             <Setter Property="SelectedBackground" Value="#ED1C24"/>
-            <Setter Property="SelectedBorderBrush" Value="#2C3242"/>
+            <Setter Property="SelectedBorderBrush" Value="#ED1C24"/>
             <Setter Property="SelectedBorderThickness" Value="0"/>
+            <Setter Property="BlackSelectedForeground" Value="#2C3242"/>
+            <Setter Property="BlackSelectedBackground" Value="Transparent"/>
+            <Setter Property="BlackSelectedBorderBrush" Value="#2C3242"/>
+            <Setter Property="BlackSelectedBorderThickness" Value="2"/>
             <Setter Property="BlackoutForeground" Value="#BDBDBD"/>
             <Setter Property="Foreground" Value="#212121"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -67,6 +71,17 @@
                                             <Setter Target="Root.BorderThickness" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=SelectedBorderThickness, Mode=OneWay}"/>
                                         </VisualState.Setters>
                                     </VisualState>
+                                    <VisualState x:Name="BlackSelectedState">
+                                        <VisualState.Setters>
+                                            <Setter Target="TodayText.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedForeground, Mode=OneWay}"/>
+                                            <Setter Target="NotTodayText.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedForeground, Mode=OneWay}"/>
+                                            <Setter Target="TodayText.FontWeight" Value="Bold"/>
+                                            <Setter Target="NotTodayText.FontWeight" Value="Bold"/>
+                                            <Setter Target="Root.Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedBackground, Mode=OneWay}"/>
+                                            <Setter Target="Root.BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedBorderBrush, Mode=OneWay}"/>
+                                            <Setter Target="Root.BorderThickness" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedBorderThickness, Mode=OneWay}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
                                     <VisualState x:Name="OldDateTimeState">
                                         <VisualState.Setters>
                                             <Setter Target="TodayText.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=SelectedForeground, Mode=OneWay}"/>
@@ -85,8 +100,8 @@
                                             <Setter Target="TodayText.FontWeight" Value="Bold"/>
                                             <Setter Target="NotTodayText.FontWeight" Value="Bold"/>
                                             <Setter Target="Root.Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=SelectedBackground, Mode=OneWay}"/>
-                                            <Setter Target="Root.BorderBrush" Value="#2C3242"/>
-                                            <Setter Target="Root.BorderThickness" Value="2"/>
+                                            <Setter Target="Root.BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedBorderBrush, Mode=OneWay}"/>
+                                            <Setter Target="Root.BorderThickness" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackSelectedBorderThickness, Mode=OneWay}"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
