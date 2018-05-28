@@ -167,13 +167,14 @@ namespace CalendarB.Controls.RTDCalendarView
             {
                 SelectionChanged?.Invoke(SelectedItem, null);
                 Debug.WriteLine("Selected: " + SelectedItem.DateTime);
+	            SelectedDate = SelectedItem.DateTime;
             }
             else
             {
                 UnselectionChanged?.Invoke(SelectedItem, null);
                 Debug.WriteLine("Unselected: " + SelectedItem.DateTime);
-
-                SelectedItem = null;
+	            SelectedDate = null;
+				SelectedItem = null;
             }
         }
 
@@ -213,12 +214,14 @@ namespace CalendarB.Controls.RTDCalendarView
 
             foreach (var uiElement in ContentTemplateRoot.Items)
             {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView)) continue;
+                if (!(uiElement is AdaptiveGridView adaptiveGridView))
+	                continue;
+
                 foreach (var frameworkElement in adaptiveGridView.Items)
                 {
-                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton)) continue;
+                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton))
+	                    continue;
 
-                    proCalendarToggleButton.IsBlackSelectionMode = OldDateTime != default(DateTime);
                     proCalendarToggleButton.OldDateTime = proCalendarToggleButton.DateTime != OldDateTime ? default(DateTime) : OldDateTime;
                 }
             }

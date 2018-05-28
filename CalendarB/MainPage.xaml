@@ -7,10 +7,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CalendarB.UserControls"
+    xmlns:rtdCalendarView="using:CalendarB.Controls.RTDCalendarView"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <controls:CalendarOnContentDialog/>
-    </Grid>
+    <StackPanel>
+        <rtdCalendarView:RTDCalendarView x:Name="ProductCalendarView" IsBlackSelectionMode="False"/>
+	    <rtdCalendarView:RTDCalendarView x:Name="ServiceCalendarView" IsBlackSelectionMode="True"
+	                                     OldDateTime="{Binding ElementName=ProductCalendarView, Path=SelectedDate, Mode=OneWay}"/>
+    </StackPanel>
 </Page>
