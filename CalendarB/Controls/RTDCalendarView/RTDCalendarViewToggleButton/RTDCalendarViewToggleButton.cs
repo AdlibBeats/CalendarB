@@ -61,7 +61,7 @@ namespace CalendarB.Controls.RTDCalendarView
                 VisualStateManager.GoToState(this, IsBlackSelectionMode ? "BlackSelectedState" : "SelectedState", true);
             else if (OldDateTime != default(DateTime))
             {
-                IsBlackSelectionMode = false;
+                //IsBlackSelectionMode = false;
                 VisualStateManager.GoToState(this, "OldDateTimeState", true);
             }
             else

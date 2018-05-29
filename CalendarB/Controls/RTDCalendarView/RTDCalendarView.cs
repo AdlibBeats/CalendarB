@@ -82,7 +82,8 @@ namespace CalendarB.Controls.RTDCalendarView
                 ContentTemplateRoot.Loaded -= OnContentTemplateRootLoaded;
 
             ContentTemplateRoot = GetTemplateChild("ContentFlipView") as Selector;
-            if (ContentTemplateRoot == null) return;
+            if (ContentTemplateRoot == null)
+                return;
             
             ContentTemplateRoot.Items.Clear();
 
@@ -183,10 +184,14 @@ namespace CalendarB.Controls.RTDCalendarView
             int index = 0;
             foreach (var uiElement in ContentTemplateRoot.Items)
             {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView)) continue;
+                if (!(uiElement is AdaptiveGridView adaptiveGridView))
+                    continue;
+
                 foreach (var framework in adaptiveGridView.Items)
                 {
-                    if (!(framework is RTDCalendarViewToggleButton proCalendarToggleButton)) continue;
+                    if (!(framework is RTDCalendarViewToggleButton proCalendarToggleButton))
+                        continue;
+
                     UpdateFromSelectionMode(index, proCalendarToggleButton);
                 }
                 index++;
@@ -199,10 +204,14 @@ namespace CalendarB.Controls.RTDCalendarView
 
             foreach (var uiElement in ContentTemplateRoot.Items)
             {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView)) continue;
+                if (!(uiElement is AdaptiveGridView adaptiveGridView))
+                    continue;
+
                 foreach (var frameworkElement in adaptiveGridView.Items)
                 {
-                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton)) continue;
+                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton))
+                        continue;
+
                     proCalendarToggleButton.IsBlackSelectionMode = IsBlackSelectionMode;
                 }
             }
@@ -210,7 +219,8 @@ namespace CalendarB.Controls.RTDCalendarView
 
         private void UpdateOldDateTime()
         {
-            if (ContentTemplateRoot == null) return;
+            if (ContentTemplateRoot == null)
+                return;
 
             foreach (var uiElement in ContentTemplateRoot.Items)
             {
@@ -222,7 +232,9 @@ namespace CalendarB.Controls.RTDCalendarView
                     if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton))
 	                    continue;
 
-                    proCalendarToggleButton.OldDateTime = proCalendarToggleButton.DateTime != OldDateTime ? default(DateTime) : OldDateTime;
+                    proCalendarToggleButton.OldDateTime =
+                        proCalendarToggleButton.DateTime != OldDateTime ?
+                            default(DateTime) : OldDateTime;
                 }
             }
         }
@@ -236,12 +248,11 @@ namespace CalendarB.Controls.RTDCalendarView
                 if (!(uiElement is AdaptiveGridView adaptiveGridView)) continue;
                 foreach (var frameworkElement in adaptiveGridView.Items)
                 {
-                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton)) continue;
+                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton))
+                        continue;
 
-                    if (!SelectedDate.HasValue)
-                        proCalendarToggleButton.IsSelected = false;
-                    else
-                        proCalendarToggleButton.IsSelected = proCalendarToggleButton.DateTime == SelectedDate.Value;
+                    proCalendarToggleButton.IsSelected =
+                        proCalendarToggleButton.DateTime == (SelectedDate ?? default(DateTime));
                 }
             }
         }
