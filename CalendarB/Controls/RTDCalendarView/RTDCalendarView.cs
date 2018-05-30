@@ -21,48 +21,85 @@ namespace CalendarB.Controls.RTDCalendarView
         public event RoutedEventHandler SelectionChanged;
         public event RoutedEventHandler UnselectionChanged;
 
-        public RTDCalendarView()
-        {
-            DefaultStyleKey = typeof(RTDCalendarView);
-        }
+        private ButtonBase _previousButtonVertical;
+        private ButtonBase _nextButtonVertical;
+        private AdaptiveGridView _daysOfWeekGridView;
+        private IEnumerable<AdaptiveGridView> _monthsGridView;
+
+        public RTDCalendarView() => DefaultStyleKey = typeof(RTDCalendarView);
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            UpdateDaysOfWeekContent();
-            UpdateContentTemplateRoot();
+            if (_previousButtonVertical != null)
+                _previousButtonVertical.Click -= OnNavigationButtonClick;
 
-            UpdateNavigationButtons("PreviousButtonVertical", -1, i => i.SelectedIndex > 0);
-            UpdateNavigationButtons("NextButtonVertical", 1, i => i.Items.Count - 1 > i.SelectedIndex);
+            if (_nextButtonVertical != null)
+                _nextButtonVertical.Click -= OnNavigationButtonClick;
 
+            if (ContentTemplateRoot != null)
+                ContentTemplateRoot.Loaded -= OnContentTemplateRootLoaded;
+
+            _daysOfWeekGridView = GetTemplateChild("DaysOfWeekContent") as AdaptiveGridView;
+            if (_daysOfWeekGridView != null)
+                _daysOfWeekGridView.Items = GetDaysOfWeekContentControls();
+
+            _previousButtonVertical = GetTemplateChild("PreviousButtonVertical") as ButtonBase;
+            if (_previousButtonVertical != null)
+                _previousButtonVertical.Click += OnNavigationButtonClick;
+
+            _nextButtonVertical = GetTemplateChild("NextButtonVertical") as ButtonBase;
+            if (_nextButtonVertical != null)
+                _nextButtonVertical.Click += OnNavigationButtonClick;
+
+            ContentTemplateRoot = GetTemplateChild("ContentFlipView") as Selector;
+            if (ContentTemplateRoot != null)
+                ContentTemplateRoot.Loaded += OnContentTemplateRootLoaded;
+
+            UpdateContentTemplateRootItems();
             UpdateBlackSelectionMode();
             UpdateOldDateTime();
         }
 
-        private void UpdateNavigationButtons(string childName, int navigatedIndex, Predicate<Selector> func)
+        private void UpdateContentTemplateRootItems()
         {
-            var navigationButton = GetTemplateChild(childName) as ButtonBase;
-            if (navigationButton == null) return;
+            if (ContentTemplateRoot == null) return;
 
-            navigationButton.Click -= OnNavigationButtonClick;
-            navigationButton.Click += OnNavigationButtonClick;
-
-            void OnNavigationButtonClick(object sender, RoutedEventArgs e)
+            foreach (var item in ContentTemplateRoot.Items)
             {
-                if (func.Invoke(ContentTemplateRoot))
-                    ContentTemplateRoot.SelectedIndex += navigatedIndex;
+                if (!(item is AdaptiveGridView monthGridView)) continue;
+                monthGridView.SelectionChanged -= OnAdaptiveGridViewSelectionChanged;
+            }
+            ContentTemplateRoot.Items.Clear();
+
+            _monthsGridView = GetMonthsGridView();
+            foreach (var monthGridView in _monthsGridView)
+            {
+                monthGridView.SelectionChanged += OnAdaptiveGridViewSelectionChanged;
+                ContentTemplateRoot.Items.Add(monthGridView);
             }
         }
 
-        private void UpdateDaysOfWeekContent()
+        private IEnumerable<AdaptiveGridView> GetMonthsGridView()
         {
-            DaysOfWeekContent = GetTemplateChild("DaysOfWeekContent") as AdaptiveGridView;
-            if (DaysOfWeekContent == null) return;
+            var daysGridView = new List<AdaptiveGridView>();
+            foreach (var month in new CalendarMonths(EnableDates).Months)
+            {
+                daysGridView.Add(new AdaptiveGridView
+                {
+                    RowsCount = 6,
+                    ColumnsCount = 7,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    Items = month.Days
+                });
+            }
+            return daysGridView;
+        }
 
-            DaysOfWeekContent.Clear();
-
-            var contentDays = new List<ContentControl>
+        private IEnumerable<ContentControl> GetDaysOfWeekContentControls() =>
+            new List<ContentControl>
             {
                 new ContentControl().GetDefaultStyle("Пн"),
                 new ContentControl().GetDefaultStyle("Вт"),
@@ -73,37 +110,26 @@ namespace CalendarB.Controls.RTDCalendarView
                 new ContentControl().GetDefaultStyle("Вс"),
             };
 
-            DaysOfWeekContent.Items = contentDays;
+        private void OnNavigationButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is ButtonBase button)) return;
+            UpdateContentTemplateRootSelectedIndex(button.Name);
         }
 
-        private void UpdateContentTemplateRoot()
+        private void UpdateContentTemplateRootSelectedIndex(string buttonName)
         {
-            if (ContentTemplateRoot != null)
-                ContentTemplateRoot.Loaded -= OnContentTemplateRootLoaded;
-
-            ContentTemplateRoot = GetTemplateChild("ContentFlipView") as Selector;
-            if (ContentTemplateRoot == null)
-                return;
-            
-            ContentTemplateRoot.Items.Clear();
-
-            var listDates = new CalendarMonths(EnableDates).Months;
-            foreach (var item in listDates)
+            if (ContentTemplateRoot == null) return;
+            switch (buttonName)
             {
-                var adaptiveGridView = new AdaptiveGridView
-                {
-                    RowsCount = 6,
-                    ColumnsCount = 7,
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch,
-                    Items = item.Days
-                };
-
-                //adaptiveGridView.UpdateItems();+
-                adaptiveGridView.SelectionChanged += OnAdaptiveGridViewSelectionChanged;
-                ContentTemplateRoot.Items.Add(adaptiveGridView);
+                case "PreviousButtonVertical":
+                        if (ContentTemplateRoot.SelectedIndex > 0)
+                            ContentTemplateRoot.SelectedIndex -= 1;
+                        break;
+                case "NextButtonVertical":
+                        if (ContentTemplateRoot.Items.Count - 1 > ContentTemplateRoot.SelectedIndex)
+                            ContentTemplateRoot.SelectedIndex += 1;
+                        break;
             }
-            ContentTemplateRoot.Loaded += OnContentTemplateRootLoaded;
         }
 
         private void OnContentTemplateRootLoaded(object sender, RoutedEventArgs e)
@@ -315,7 +341,7 @@ namespace CalendarB.Controls.RTDCalendarView
 
         public static readonly DependencyProperty EnableDatesProperty =
             DependencyProperty.Register(nameof(EnableDates), typeof(List<DateTime>), typeof(RTDCalendarView),
-                new PropertyMetadata(new List<DateTime>(), (d, e) => ((RTDCalendarView)d).UpdateContentTemplateRoot()));
+                new PropertyMetadata(new List<DateTime>(), (d, e) => ((RTDCalendarView)d).UpdateContentTemplateRootItems()));
 
         public Selector ContentTemplateRoot
         {
@@ -336,16 +362,6 @@ namespace CalendarB.Controls.RTDCalendarView
         public static readonly DependencyProperty IsContentTemplateRootLoadedProperty =
             DependencyProperty.Register(nameof(IsContentTemplateRootLoaded), typeof(bool), typeof(RTDCalendarView),
                 new PropertyMetadata(false));
-
-        public AdaptiveGridView DaysOfWeekContent
-        {
-            get => (AdaptiveGridView)GetValue(DaysOfWeekContentProperty);
-            private set => SetValue(DaysOfWeekContentProperty, value);
-        }
-
-        public static readonly DependencyProperty DaysOfWeekContentProperty =
-            DependencyProperty.Register(nameof(DaysOfWeekContent), typeof(AdaptiveGridView), typeof(RTDCalendarView),
-                new PropertyMetadata(default(AdaptiveGridView)));
 
         public RTDCalendarViewToggleButton SelectedItem
         {

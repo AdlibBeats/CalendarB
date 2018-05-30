@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -13,10 +12,7 @@ namespace CalendarB.Controls.RTDCalendarView
 		private int _currentColumn;
 		private int _currentRow;
 
-		public AdaptiveGridView()
-		{
-			DefaultStyleKey = typeof(AdaptiveGridView);
-		}
+		public AdaptiveGridView() => DefaultStyleKey = typeof(AdaptiveGridView);
 
 		protected override void OnApplyTemplate()
 		{
@@ -27,8 +23,8 @@ namespace CalendarB.Controls.RTDCalendarView
 			UpdateColumnsCount();
 			UpdateRowsCount();
 			UpdateItems();
-			UpdateItemWidth();
-			UpdateItemHeigh();
+			//UpdateItemWidth();
+			//UpdateItemHeigh();
 		}
 
 		#region Private Updating Methods
@@ -66,19 +62,19 @@ namespace CalendarB.Controls.RTDCalendarView
 				Add(item);
 		}
 
-		private void UpdateItemWidth()
-		{
-			if (ItemsPanelRoot?.Children == null) return;
-			//foreach (var child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
-			//	child.Width = ItemWidth;
-		}
+		//private void UpdateItemWidth()
+		//{
+		//	if (ItemsPanelRoot?.Children == null) return;
+		//	foreach (var child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
+		//		child.Width = ItemWidth;
+		//}
 
-		private void UpdateItemHeigh()
-		{
-			if (ItemsPanelRoot?.Children == null) return;
-			//foreach (FrameworkElement child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
-			//	child.Height = ItemHeight;
-		}
+		//private void UpdateItemHeigh()
+		//{
+		//	if (ItemsPanelRoot?.Children == null) return;
+		//	foreach (FrameworkElement child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
+		//		child.Height = ItemHeight;
+		//}
 		#endregion
 
 		#region Public Dependency Properties
