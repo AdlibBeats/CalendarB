@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace CalendarB.Controls.RTDCalendarView
 {
-	public enum CalendarViewSelectionMode
-	{
-		None,
-		Single,
-		Multiple,
-		Extended
-	}
-
     public sealed class RTDCalendarView : Control
     {
+        public event RoutedEventHandler Loaded;
+
         public event RoutedEventHandler SelectionChanged;
         public event RoutedEventHandler UnselectionChanged;
 
@@ -134,26 +127,13 @@ namespace CalendarB.Controls.RTDCalendarView
 
         private void OnContentTemplateRootLoaded(object sender, RoutedEventArgs e)
         {
-            if (!IsContentTemplateRootLoaded)
-                OnLoadingUpdateChildren();
-
-            IsContentTemplateRootLoaded = true;
-
             if (SelectedItem != null)
                 LoadSelectedChildren(i => i.IsSelected);
             else
                 LoadSelectedChildren(i => i.IsToday);
-        }
 
-        public void OnLoadingUpdateChildren()
-        {
-            if (ContentTemplateRoot == null) return;
-
-            foreach (var uiElement in ContentTemplateRoot.Items)
-            {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView)) continue;
-                adaptiveGridView.SelectionChanged += OnAdaptiveGridViewSelectionChanged;
-            }
+            IsLoaded = true;
+            Loaded?.Invoke(sender, e);
         }
 
         private void LoadSelectedChildren(Predicate<RTDCalendarViewToggleButton> func)
@@ -173,8 +153,6 @@ namespace CalendarB.Controls.RTDCalendarView
                 }
                 index++;
             }
-
-            OnLoadingUpdateChildren();
         }
 
         private void OnAdaptiveGridViewSelectionChanged(object sender, RoutedEventArgs e)
@@ -205,132 +183,35 @@ namespace CalendarB.Controls.RTDCalendarView
             }
         }
 
-        private void OnSelectedChangedUpdateChildren()
-        {
-            int index = 0;
-            foreach (var uiElement in ContentTemplateRoot.Items)
-            {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView))
-                    continue;
+        private void OnSelectedChangedUpdateChildren() =>
+            UpdateCalendarViewToggleButton((calendarViewToggleButton) =>
+                calendarViewToggleButton.IsSelected = SelectedItem.DateTime.Date == calendarViewToggleButton.DateTime.Date);
 
-                foreach (var framework in adaptiveGridView.Items)
-                {
-                    if (!(framework is RTDCalendarViewToggleButton proCalendarToggleButton))
-                        continue;
+        private void UpdateBlackSelectionMode() =>
+            UpdateCalendarViewToggleButton((calendarViewToggleButton) =>
+                calendarViewToggleButton.IsBlackSelectionMode = IsBlackSelectionMode);
 
-                    UpdateFromSelectionMode(index, proCalendarToggleButton);
-                }
-                index++;
-            }
-        }
+        private void UpdateOldDateTime() =>
+            UpdateCalendarViewToggleButton((calendarViewToggleButton) =>
+                calendarViewToggleButton.OldDateTime = calendarViewToggleButton.DateTime != OldDateTime ?
+                    default(DateTime) : OldDateTime);
 
-        private void UpdateBlackSelectionMode()
+        private void UpdateSelectedDate() =>
+            UpdateCalendarViewToggleButton((calendarViewToggleButton) =>
+                calendarViewToggleButton.IsSelected = calendarViewToggleButton.DateTime == (SelectedDate ?? default(DateTime)));
+
+        private void UpdateCalendarViewToggleButton(Action<RTDCalendarViewToggleButton> action)
         {
             if (ContentTemplateRoot == null) return;
-
-            foreach (var uiElement in ContentTemplateRoot.Items)
-            {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView))
-                    continue;
-
-                foreach (var frameworkElement in adaptiveGridView.Items)
-                {
-                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton))
-                        continue;
-
-                    proCalendarToggleButton.IsBlackSelectionMode = IsBlackSelectionMode;
-                }
-            }
-        }
-
-        private void UpdateOldDateTime()
-        {
-            if (ContentTemplateRoot == null)
-                return;
-
-            foreach (var uiElement in ContentTemplateRoot.Items)
-            {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView))
-	                continue;
-
-                foreach (var frameworkElement in adaptiveGridView.Items)
-                {
-                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton))
-	                    continue;
-
-                    proCalendarToggleButton.OldDateTime =
-                        proCalendarToggleButton.DateTime != OldDateTime ?
-                            default(DateTime) : OldDateTime;
-                }
-            }
-        }
-
-        private void UpdateSelectedDate()
-        {
-            if (ContentTemplateRoot == null) return;
-
             foreach (var uiElement in ContentTemplateRoot.Items)
             {
                 if (!(uiElement is AdaptiveGridView adaptiveGridView)) continue;
                 foreach (var frameworkElement in adaptiveGridView.Items)
                 {
-                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton))
-                        continue;
-
-                    proCalendarToggleButton.IsSelected =
-                        proCalendarToggleButton.DateTime == (SelectedDate ?? default(DateTime));
+                    if (!(frameworkElement is RTDCalendarViewToggleButton calendarViewToggleButton)) continue;
+                    action?.Invoke(calendarViewToggleButton);
                 }
             }
-        }
-
-        private void UpdateFromSelectionMode(int index, RTDCalendarViewToggleButton proCalendarToggleButton)
-        {
-            switch (SelectionMode)
-            {
-                case CalendarViewSelectionMode.None:
-                    {
-                        UpdateNoneMode(index, proCalendarToggleButton);
-                        break;
-                    }
-                case CalendarViewSelectionMode.Single:
-                    {
-                        UpdateSingleMode(index, proCalendarToggleButton);
-                        break;
-                    }
-                case CalendarViewSelectionMode.Multiple:
-                    {
-                        UpdateMultipleMode(index, proCalendarToggleButton);
-                        break;
-                    }
-                case CalendarViewSelectionMode.Extended:
-                    {
-                        UpdateExtendedMode(index, proCalendarToggleButton);
-                        break;
-                    }
-            }
-        }
-
-        private void UpdateNoneMode(int index, RTDCalendarViewToggleButton proCalendarToggleButton)
-        {
-            //TODO: UpdateNoneMode();
-        }
-
-        private void UpdateSingleMode(int index, RTDCalendarViewToggleButton proCalendarToggleButton)
-        {
-            if (SelectedItem.IsSelected && ContentTemplateRoot.SelectedIndex == index)
-                proCalendarToggleButton.IsSelected = SelectedItem.DateTime.Date == proCalendarToggleButton.DateTime.Date;
-            else
-                proCalendarToggleButton.IsSelected = false;
-        }
-
-        private void UpdateMultipleMode(int index, RTDCalendarViewToggleButton proCalendarToggleButton)
-        {
-            //TODO: UpdateMultipleMode();
-        }
-
-        private void UpdateExtendedMode(int index, RTDCalendarViewToggleButton proCalendarToggleButton)
-        {
-            //TODO: UpdateExtendedMode();
         }
 
         public List<DateTime> EnableDates
@@ -353,14 +234,14 @@ namespace CalendarB.Controls.RTDCalendarView
             DependencyProperty.Register(nameof(ContentTemplateRoot), typeof(Selector), typeof(RTDCalendarView),
                 new PropertyMetadata(default(Selector)));
 
-        public bool IsContentTemplateRootLoaded
+        public bool IsLoaded
         {
-            get => (bool)GetValue(IsContentTemplateRootLoadedProperty);
-            private set => SetValue(IsContentTemplateRootLoadedProperty, value);
+            get => (bool)GetValue(IsLoadedProperty);
+            private set => SetValue(IsLoadedProperty, value);
         }
 
-        public static readonly DependencyProperty IsContentTemplateRootLoadedProperty =
-            DependencyProperty.Register(nameof(IsContentTemplateRootLoaded), typeof(bool), typeof(RTDCalendarView),
+        public static readonly DependencyProperty IsLoadedProperty =
+            DependencyProperty.Register(nameof(IsLoaded), typeof(bool), typeof(RTDCalendarView),
                 new PropertyMetadata(false));
 
         public RTDCalendarViewToggleButton SelectedItem
@@ -372,16 +253,6 @@ namespace CalendarB.Controls.RTDCalendarView
         public static readonly DependencyProperty SelectedItemProperty =
             DependencyProperty.Register(nameof(SelectedItem), typeof(RTDCalendarViewToggleButton), typeof(RTDCalendarView),
                 new PropertyMetadata(default(RTDCalendarViewToggleButton)));
-
-        public CalendarViewSelectionMode SelectionMode
-        {
-            get => (CalendarViewSelectionMode)GetValue(SelectionModeProperty);
-            set => SetValue(SelectionModeProperty, value);
-        }
-
-        public static readonly DependencyProperty SelectionModeProperty =
-            DependencyProperty.Register(nameof(SelectionMode), typeof(CalendarViewSelectionMode), typeof(RTDCalendarView),
-                new PropertyMetadata(CalendarViewSelectionMode.Single));
 
         public bool IsBlackSelectionMode
         {
