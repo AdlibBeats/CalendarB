@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace CalendarB.Controls.RTDCalendarView
 {
+    public enum RTDCalendarMonthButtonsNavigation
+    {
+        Next,
+        Previous
+    }
+
     public sealed class RTDCalendarView : Control
     {
-        public event RoutedEventHandler Loaded;
-
         public event RoutedEventHandler SelectionChanged;
         public event RoutedEventHandler UnselectionChanged;
 
         private ButtonBase _previousButtonVertical;
         private ButtonBase _nextButtonVertical;
         private AdaptiveGridView _daysOfWeekGridView;
-        private IEnumerable<AdaptiveGridView> _monthsGridView;
 
         public RTDCalendarView() => DefaultStyleKey = typeof(RTDCalendarView);
 
@@ -30,9 +34,6 @@ namespace CalendarB.Controls.RTDCalendarView
 
             if (_nextButtonVertical != null)
                 _nextButtonVertical.Click -= OnNavigationButtonClick;
-
-            if (ContentTemplateRoot != null)
-                ContentTemplateRoot.Loaded -= OnContentTemplateRootLoaded;
 
             _daysOfWeekGridView = GetTemplateChild("DaysOfWeekContent") as AdaptiveGridView;
             if (_daysOfWeekGridView != null)
@@ -47,10 +48,9 @@ namespace CalendarB.Controls.RTDCalendarView
                 _nextButtonVertical.Click += OnNavigationButtonClick;
 
             ContentTemplateRoot = GetTemplateChild("ContentFlipView") as Selector;
-            if (ContentTemplateRoot != null)
-                ContentTemplateRoot.Loaded += OnContentTemplateRootLoaded;
 
             UpdateContentTemplateRootItems();
+            UpdateSelectedDate();
             UpdateBlackSelectionMode();
             UpdateOldDateTime();
         }
@@ -65,9 +65,8 @@ namespace CalendarB.Controls.RTDCalendarView
                 monthGridView.SelectionChanged -= OnAdaptiveGridViewSelectionChanged;
             }
             ContentTemplateRoot.Items.Clear();
-
-            _monthsGridView = GetMonthsGridView();
-            foreach (var monthGridView in _monthsGridView)
+            
+            foreach (var monthGridView in GetMonthsGridView())
             {
                 monthGridView.SelectionChanged += OnAdaptiveGridViewSelectionChanged;
                 ContentTemplateRoot.Items.Add(monthGridView);
@@ -106,52 +105,28 @@ namespace CalendarB.Controls.RTDCalendarView
         private void OnNavigationButtonClick(object sender, RoutedEventArgs e)
         {
             if (!(sender is ButtonBase button)) return;
-            UpdateContentTemplateRootSelectedIndex(button.Name);
+
+            RTDCalendarMonthButtonsNavigation calendarMonthButtonsNavigation =
+                button.Name == "PreviousButtonVertical" ?
+                    RTDCalendarMonthButtonsNavigation.Previous :
+                    RTDCalendarMonthButtonsNavigation.Next;
+
+            UpdateContentTemplateRootSelectedIndex(calendarMonthButtonsNavigation);
         }
 
-        private void UpdateContentTemplateRootSelectedIndex(string buttonName)
+        private void UpdateContentTemplateRootSelectedIndex(RTDCalendarMonthButtonsNavigation calendarMonthButtonsNavigation)
         {
             if (ContentTemplateRoot == null) return;
-            switch (buttonName)
+            switch (calendarMonthButtonsNavigation)
             {
-                case "PreviousButtonVertical":
+                case RTDCalendarMonthButtonsNavigation.Previous:
                         if (ContentTemplateRoot.SelectedIndex > 0)
                             ContentTemplateRoot.SelectedIndex -= 1;
                         break;
-                case "NextButtonVertical":
+                case RTDCalendarMonthButtonsNavigation.Next:
                         if (ContentTemplateRoot.Items.Count - 1 > ContentTemplateRoot.SelectedIndex)
                             ContentTemplateRoot.SelectedIndex += 1;
                         break;
-            }
-        }
-
-        private void OnContentTemplateRootLoaded(object sender, RoutedEventArgs e)
-        {
-            if (SelectedItem != null)
-                LoadSelectedChildren(i => i.IsSelected);
-            else
-                LoadSelectedChildren(i => i.IsToday);
-
-            IsLoaded = true;
-            Loaded?.Invoke(sender, e);
-        }
-
-        private void LoadSelectedChildren(Predicate<RTDCalendarViewToggleButton> func)
-        {
-            int index = 0;
-            foreach (var uiElement in ContentTemplateRoot.Items)
-            {
-                if (!(uiElement is AdaptiveGridView adaptiveGridView)) continue;
-                foreach (var frameworkElement in adaptiveGridView.Items)
-                {
-                    if (!(frameworkElement is RTDCalendarViewToggleButton proCalendarToggleButton)) continue;
-                    if (func.Invoke(proCalendarToggleButton))
-                    {
-                        ContentTemplateRoot.SelectedIndex = index;
-                        if (proCalendarToggleButton.DateTime.Day > 20) return;
-                    }
-                }
-                index++;
             }
         }
 
@@ -170,13 +145,13 @@ namespace CalendarB.Controls.RTDCalendarView
         {
             if (SelectedItem.IsSelected)
             {
-                SelectionChanged?.Invoke(SelectedItem, null);
+                SelectionChanged?.Invoke(SelectedItem, new RoutedEventArgs());
                 Debug.WriteLine("Selected: " + SelectedItem.DateTime);
 	            SelectedDate = SelectedItem.DateTime;
             }
             else
             {
-                UnselectionChanged?.Invoke(SelectedItem, null);
+                UnselectionChanged?.Invoke(SelectedItem, new RoutedEventArgs());
                 Debug.WriteLine("Unselected: " + SelectedItem.DateTime);
 	            SelectedDate = null;
 				SelectedItem = null;
@@ -198,7 +173,8 @@ namespace CalendarB.Controls.RTDCalendarView
 
         private void UpdateSelectedDate() =>
             UpdateCalendarViewToggleButton((calendarViewToggleButton) =>
-                calendarViewToggleButton.IsSelected = calendarViewToggleButton.DateTime == (SelectedDate ?? default(DateTime)));
+                calendarViewToggleButton.IsSelected = calendarViewToggleButton.IsEnabled &&
+                    calendarViewToggleButton.DateTime == (SelectedDate ?? default(DateTime)));
 
         private void UpdateCalendarViewToggleButton(Action<RTDCalendarViewToggleButton> action)
         {
@@ -233,16 +209,6 @@ namespace CalendarB.Controls.RTDCalendarView
         public static readonly DependencyProperty ContentTemplateRootProperty =
             DependencyProperty.Register(nameof(ContentTemplateRoot), typeof(Selector), typeof(RTDCalendarView),
                 new PropertyMetadata(default(Selector)));
-
-        public bool IsLoaded
-        {
-            get => (bool)GetValue(IsLoadedProperty);
-            private set => SetValue(IsLoadedProperty, value);
-        }
-
-        public static readonly DependencyProperty IsLoadedProperty =
-            DependencyProperty.Register(nameof(IsLoaded), typeof(bool), typeof(RTDCalendarView),
-                new PropertyMetadata(false));
 
         public RTDCalendarViewToggleButton SelectedItem
         {

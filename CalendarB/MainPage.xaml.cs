@@ -17,7 +17,8 @@ namespace CalendarB
 		        dates.Add(new DateTime(DateTime.Now.Year, month, day));
 
 	        ProductCalendarView.EnableDates = dates.Where(x => x.Day % 2 == 0).ToList();
-	        ServiceCalendarView.EnableDates = dates.Where(x => x.Day % 2 == 0).ToList();
+            ProductCalendarView.SelectedDate = new DateTime(2018, 5, 12);
+            ServiceCalendarView.EnableDates = dates.Where(x => x.Day % 2 == 0).ToList();
 		}
     }
 }

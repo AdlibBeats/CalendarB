@@ -15,6 +15,7 @@ namespace CalendarB.UserControls
             {
                 SetEnableDates();
                 SetSelectionMode();
+                SetSelectedDate();
             };
         }
 
@@ -45,6 +46,11 @@ namespace CalendarB.UserControls
 
             //Reset BlackSelectionMode
             //calendar.OldDateTime = default(DateTime);
+        }
+
+        private void SetSelectedDate()
+        {
+            calendar.SelectedDate = new DateTime(2018, 5, 12);
         }
     }
 }
