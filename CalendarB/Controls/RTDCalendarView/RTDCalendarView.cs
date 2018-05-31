@@ -58,13 +58,15 @@ namespace CalendarB.Controls.RTDCalendarView
         private void UpdateContentTemplateRootItems()
         {
             if (ContentTemplateRoot == null) return;
-
-            foreach (var item in ContentTemplateRoot.Items)
+            if (ContentTemplateRoot.Items.Any())
             {
-                if (!(item is AdaptiveGridView monthGridView)) continue;
-                monthGridView.SelectionChanged -= OnAdaptiveGridViewSelectionChanged;
+                foreach (var item in ContentTemplateRoot.Items)
+                {
+                    if (!(item is AdaptiveGridView monthGridView)) continue;
+                    monthGridView.SelectionChanged -= OnAdaptiveGridViewSelectionChanged;
+                }
+                ContentTemplateRoot.Items.Clear();
             }
-            ContentTemplateRoot.Items.Clear();
             
             foreach (var monthGridView in GetMonthsGridView())
             {
@@ -160,7 +162,8 @@ namespace CalendarB.Controls.RTDCalendarView
 
         private void OnSelectedChangedUpdateChildren() =>
             UpdateCalendarViewToggleButton((calendarViewToggleButton) =>
-                calendarViewToggleButton.IsSelected = SelectedItem.DateTime.Date == calendarViewToggleButton.DateTime.Date);
+                calendarViewToggleButton.IsSelected =
+                    SelectedItem.DateTime.Date == calendarViewToggleButton.DateTime.Date);
 
         private void UpdateBlackSelectionMode() =>
             UpdateCalendarViewToggleButton((calendarViewToggleButton) =>
