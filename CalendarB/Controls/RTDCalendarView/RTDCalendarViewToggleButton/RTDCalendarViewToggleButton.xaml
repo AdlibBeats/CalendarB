@@ -48,9 +48,7 @@
                                 <VisualStateGroup x:Name="TodayStates">
                                     <VisualState>
                                         <VisualState.StateTriggers>
-                                            <StateTrigger
-                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
-                                                Path=IsToday, Mode=OneWay}"/>
+                                            <StateTrigger IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsToday, Mode=OneWay}"/>
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="TodayText.Visibility" Value="Visible"/>
@@ -109,27 +107,18 @@
                                     <VisualState>
                                         <VisualState.StateTriggers>
                                             <StateTrigger
-                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
-                                                Path=IsBlackout, Mode=OneWay}"/>
+                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsBlackout, Mode=OneWay}"/>
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter
-                                                Target="NotTodayText.Foreground"
-                                                Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
-                                                Path=BlackoutForeground, Mode=OneWay}"/>
-                                            <Setter
-                                                Target="Root.Background"
-                                                Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
-                                                Path=Background, Mode=OneWay}"/>
+                                            <Setter Target="NotTodayText.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BlackoutForeground, Mode=OneWay}"/>
+                                            <Setter Target="Root.Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background, Mode=OneWay}"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
                                 <VisualStateGroup x:Name="HiddenStates">
                                     <VisualState>
                                         <VisualState.StateTriggers>
-                                            <StateTrigger
-                                                IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},
-                                                Path=IsHidden, Mode=OneWay}"/>
+                                            <StateTrigger IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsHidden, Mode=OneWay}"/>
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="Root.Visibility" Value="Collapsed"/>
