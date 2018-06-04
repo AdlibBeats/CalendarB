@@ -58,7 +58,7 @@
 	</Style>
 
 	<Style x:Key="CalendarFlipView" TargetType="FlipView">
-		<Setter Property="Background" Value="{ThemeResource FlipViewBackground}"/>
+		<Setter Property="Background" Value="White"/>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="TabNavigation" Value="Once"/>
 		<Setter Property="IsTabStop" Value="False"/>
@@ -92,7 +92,7 @@
 	</Style>
 
     <Style TargetType="rtdCalendarView:RTDCalendarView">
-        <Setter Property="Width" Value="278"/>
+        <Setter Property="Width" Value="300"/>
         <Setter Property="Margin" Value="0"/>
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="Foreground" Value="Black"/>
@@ -150,7 +150,7 @@
                                 x:Name="DaysOfWeekContent"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Bottom"
-                                Margin="0"
+                                Margin="0" ItemWidth="32" ItemHeight="32"
                                 Grid.Row="1"
                                 ColumnsCount="7"
                                 RowsCount="1">
@@ -158,7 +158,7 @@
 							<FlipView
                                 x:Name="ContentFlipView"
                                 Grid.Row="2"
-                                BorderBrush="Gray"
+                                BorderBrush="White"
                                 Style="{StaticResource CalendarFlipView}">
 								<FlipView.ItemsPanel>
 									<ItemsPanelTemplate>

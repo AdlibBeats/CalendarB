@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -23,8 +24,9 @@ namespace CalendarB.Controls.RTDCalendarView
 			UpdateColumnsCount();
 			UpdateRowsCount();
 			UpdateItems();
-			//UpdateItemWidth();
-			//UpdateItemHeigh();
+			UpdateItemWidth();
+			UpdateItemHeight();
+			UpdateItemMargin();
 		}
 
 		#region Private Updating Methods
@@ -62,19 +64,42 @@ namespace CalendarB.Controls.RTDCalendarView
 				Add(item);
 		}
 
-		//private void UpdateItemWidth()
-		//{
-		//	if (ItemsPanelRoot?.Children == null) return;
-		//	foreach (var child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
-		//		child.Width = ItemWidth;
-		//}
+		private void UpdateItemMargin()
+		{
+			if (ItemsPanelRoot?.Children == null) return;
+			foreach (var child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
+			{
+				child.Margin = ItemMargin;
+			}
+		}
 
-		//private void UpdateItemHeigh()
-		//{
-		//	if (ItemsPanelRoot?.Children == null) return;
-		//	foreach (FrameworkElement child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
-		//		child.Height = ItemHeight;
-		//}
+		private void UpdateItemWidth()
+		{
+			if (ItemsPanelRoot?.Children == null) return;
+			foreach (var child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
+			{
+				child.Width = ItemWidth;
+			}
+		}
+
+		private void UpdateItemHeight()
+		{
+			if (ItemsPanelRoot?.Children == null) return;
+			foreach (FrameworkElement child in ItemsPanelRoot.Children.OfType<FrameworkElement>())
+			{
+				child.Height = ItemHeight;
+			}
+		}
+
+		private void UpdateItemPadding()
+		{
+			if (ItemsPanelRoot?.Children == null) return;
+			foreach (Control child in ItemsPanelRoot.Children.OfType<Control>())
+			{
+				child.Padding = ItemPadding;
+			}
+		}
+
 		#endregion
 
 		#region Public Dependency Properties
@@ -118,25 +143,45 @@ namespace CalendarB.Controls.RTDCalendarView
 			DependencyProperty.RegisterAttached(nameof(ColumnsCount), typeof(int), typeof(AdaptiveGridView),
                 new PropertyMetadata(0, (d, e) => ((AdaptiveGridView)d).UpdateColumnsCount()));
 
-		//public double ItemWidth
-		//{
-		//	get => (double)GetValue(ItemWidthProperty);
-		//	set => SetValue(ItemWidthProperty, value);
-		//}
+		public double ItemWidth
+		{
+			get => (double)GetValue(ItemWidthProperty);
+			set => SetValue(ItemWidthProperty, value);
+		}
 
-		//public static readonly DependencyProperty ItemWidthProperty =
-		//	DependencyProperty.RegisterAttached(nameof(ItemWidth), typeof(double), typeof(AdaptiveGridView),
-  //              new PropertyMetadata(32d, (d, e) => ((AdaptiveGridView)d).UpdateItemWidth()));
+		public static readonly DependencyProperty ItemWidthProperty =
+			DependencyProperty.RegisterAttached(nameof(ItemWidth), typeof(double), typeof(AdaptiveGridView),
+				new PropertyMetadata(32d, (d, e) => ((AdaptiveGridView)d).UpdateItemWidth()));
 
-		//public double ItemHeight
-		//{
-		//	get => (double)GetValue(ItemHeightProperty);
-		//	set => SetValue(ItemHeightProperty, value);
-		//}
+		public double ItemHeight
+		{
+			get => (double)GetValue(ItemHeightProperty);
+			set => SetValue(ItemHeightProperty, value);
+		}
 
-		//public static readonly DependencyProperty ItemHeightProperty =
-		//	DependencyProperty.RegisterAttached(nameof(ItemHeight), typeof(double), typeof(AdaptiveGridView),
-  //              new PropertyMetadata(32d, (d, e) => ((AdaptiveGridView)d).UpdateItemHeigh()));
+		public static readonly DependencyProperty ItemHeightProperty =
+			DependencyProperty.RegisterAttached(nameof(ItemHeight), typeof(double), typeof(AdaptiveGridView),
+				new PropertyMetadata(32d, (d, e) => ((AdaptiveGridView)d).UpdateItemHeight()));
+
+		public Thickness ItemMargin
+		{
+			get => (Thickness)GetValue(ItemMarginProperty);
+			set => SetValue(ItemMarginProperty, value);
+		}
+
+		public static readonly DependencyProperty ItemMarginProperty =
+			DependencyProperty.RegisterAttached(nameof(ItemMargin), typeof(Thickness), typeof(AdaptiveGridView),
+				new PropertyMetadata(new Thickness(-10, -4, -10, -4), (d, e) => ((AdaptiveGridView)d).UpdateItemMargin()));
+
+		public Thickness ItemPadding
+		{
+			get => (Thickness)GetValue(ItemPaddingProperty);
+			set => SetValue(ItemPaddingProperty, value);
+		}
+
+		public static readonly DependencyProperty ItemPaddingProperty =
+			DependencyProperty.RegisterAttached(nameof(ItemPadding), typeof(Thickness), typeof(AdaptiveGridView),
+				new PropertyMetadata(new Thickness(0,0,0,0), (d, e) => ((AdaptiveGridView)d).UpdateItemPadding()));
 
 		#endregion
 
